@@ -1,8 +1,10 @@
 <link rel='stylesheet' href='../webjars/bootstrap/3.2.0/css/bootstrap.min.css'>
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel='stylesheet' href='../webjars/select2/4.0.3/css/select2.min.css'>
 <script type="text/javascript" src="../webjars/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="../webjars/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../webjars/select2/4.0.3/js/select2.min.js"></script>
 <style>
     .content {
         padding-left: 25px;
@@ -11,6 +13,28 @@
     
     .wrapper {
         margin-left: 300px;
+    }
+    
+    .big-checkbox {
+        width: 25px; 
+        height: 25px;
+    }
+    
+    .big-checkbox + label {
+        font-size: 25px;
+    }
+    
+    .btn-report {
+        color: white;
+        font-size: 25px;
+        padding: 30px 0;
+        width: 60%;
+        height: 20%;
+    }
+    
+    .btn-report:hover, .btn-report:focus {
+        color: white;
+        text-decoration: none;
     }
     
     hr {
@@ -28,7 +52,7 @@
     }
     
     .nav-side-menu {
-        overflow: auto;
+        /*overflow: auto;*/
         font-family: verdana;
         font-size: 20px;
         font-weight: 200;
