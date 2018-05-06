@@ -28,7 +28,7 @@
             <div class="content">
                 <div class="row">
                     <div class="col-md-12 content">
-                        <form method="POST" action="PrestamoServlet" name="filter">
+                        <form method="POST" action="${pageContext.request.contextPath}/admin/AdminUsersServlet" name="filter">
                             <div class="row">
                                 <div class="col-md-3 text-right">Buscar por:</div>
                                 <div class="col-md-3">
@@ -43,41 +43,54 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                    <c:choose>
-                                        <c:when test="true">
-                                            <!--Mostrar con Nombre, Apellido e Email-->
-                                            <input type="text" class="form-control" name="filterArg" id="filterArg" value="Esto se muestra al elegir Nombre, Apellido e Email"/>
-                                        </c:when>
-                                        <c:otherwise>
+                                        <!--Mostrar con Nombre, Apellido e Email-->
+                                        <input type="text" class="form-control" name="filterArg" id="filterArg" value="" placeholder="Texto de busqueda"/>
+                                        
+                                        <div id="select2Container">
                                             <!--Mostrar con Tipo de usuario y estado-->
-                                            <select class="form-control" name="filterArg" id="filterArg">
-                                                <option value="0">Activo</option>
-                                                <option value="1">Inactivo</option>
+                                            <select class="form-control" name="filterSelect" id="filterSelect">
                                             </select>
-                                        </c:otherwise>
-                                    </c:choose>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <input type="submit" class="btn" name="filterBtn" value="Buscar"/>
+                                    <input type="submit" id="btnSearch" class="btn" name="formSubmit" value="Buscar"/>
                                 </div>
                             </div>
                         </form>
                         <form method="POST" action="${pageContext.request.contextPath}/admin/AdminUsersServlet" name="Tabl">
                             <div class="row">
                                 <div class="col-md-12" style="height: 180px; overflow-y: auto;">
-                                    <display:table id="tblMain" name="<%= new UserController().getAll(false)%>">
-                                        <display:column title="Cons">
-                                            <input type="radio" name="userId" value="${tblMain.id}" onchange="this.form.submit();"/>
-                                        </display:column>
-                                        <display:column property="name" title="Nombre" sortable="true" />
-                                        <display:column property="lastname" title="Apellido" sortable="true" />
-                                        <display:column property="email" title="Email" sortable="true" />
-                                        <display:column property="user_type" title="Tipo" sortable="true" />
-                                        <display:column title="Estado" sortable="true">
-                                            <c:choose><c:when test="${tblMain.state}">Activo</c:when><c:otherwise>Inactivo</c:otherwise></c:choose>
-                                        </display:column>
-                                    </display:table>
+                                    <c:choose>
+                                        <c:when test="${filtered==null}">
+                                            <display:table id="tblMain" name="<%=new UserController().getAll(false)%>">
+                                                <display:column title="Cons">
+                                                    <input type="radio" name="userId" value="${tblMain.id}" onchange="this.form.submit();"/>
+                                                </display:column>
+                                                <display:column property="name" title="Nombre" sortable="true" />
+                                                <display:column property="lastname" title="Apellido" sortable="true" />
+                                                <display:column property="email" title="Email" sortable="true" />
+                                                <display:column property="user_type" title="Tipo" sortable="true" />
+                                                <display:column title="Estado" sortable="true">
+                                                    <c:choose><c:when test="${tblMain.state}">Activo</c:when><c:otherwise>Inactivo</c:otherwise></c:choose>
+                                                </display:column>
+                                            </display:table>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <display:table id="tblMain" name="${table}">
+                                                <display:column title="Cons">
+                                                    <input type="radio" name="userId" value="${tblMain.id}" onchange="this.form.submit();"/>
+                                                </display:column>
+                                                <display:column property="name" title="Nombre" sortable="true" />
+                                                <display:column property="lastname" title="Apellido" sortable="true" />
+                                                <display:column property="email" title="Email" sortable="true" />
+                                                <display:column property="user_type" title="Tipo" sortable="true" />
+                                                <display:column title="Estado" sortable="true">
+                                                    <c:choose><c:when test="${tblMain.state}">Activo</c:when><c:otherwise>Inactivo</c:otherwise></c:choose>
+                                                </display:column>
+                                            </display:table>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                             </div>
                         </form>
@@ -219,5 +232,47 @@
                             </form>
             </div>
         </div>
+        <script>
+            $(document).ready(function() {
+                $('select').select2();
+                $('#select2Container').hide();
+                $('#filterArg').hide();
+                $("#btnSearch").hide();
+                //Si hay mensajes, los muestra
+                if("${message}" !== "") {
+                    var title = "";
+                    title = "${status}" == "success" ? "Operación exitosa" : "Operación denegada";
+                    
+                    swal(title, "${message}", "${status}");
+                }
+            });
+            $("#filterType").change(function(){
+                var select = $("#filterType");
+                 $("#filterSelect").empty();
+                
+                if(select.val()>=4){
+                    $("#btnSearch").show();
+                    $("#filterArg").hide();
+                    $("#select2Container").show();
+                    if(select.val()==="5"){
+                        $("#filterSelect").append("<option value='1'>Activo</option>").trigger("change");
+                        $("#filterSelect").append("<option value='0'>Inactivo</option>").trigger("change");
+                    }else{
+                        $("#filterSelect").append("<option value='1'>Administrador</option>").trigger("change");
+                        $("#filterSelect").append("<option value='2'>Personal</option>").trigger("change");
+                    }
+                }else{
+                    if(select.val()==="0"){
+                        $("#btnSearch").hide();
+                        $('#select2Container').hide();
+                        $('#filterArg').hide();
+                    }else{
+                        $("#btnSearch").show();
+                        $("#filterArg").show();
+                        $("#select2Container").hide();
+                    }
+                }
+            })  ;
+        </script>
     </body>
 </html>

@@ -38,7 +38,7 @@ public class AdminUsersServlet extends HttpServlet {
        
         //viene de post?
         boolean esValido = request.getMethod().equals("POST");
-        
+        String message = "", status = "success";
 
         if(!esValido)
         {
@@ -67,17 +67,39 @@ public class AdminUsersServlet extends HttpServlet {
                 if(crud.equals("Limpiar")){
                     request.setAttribute("mode", "add");
                 }
+                
+                if(crud.equals("Buscar")){
+                    int type= Integer.parseInt(request.getParameter("filterType"));
+                    if(type>0 && type<4){
+                        String param = request.getParameter("filterArg");
+                        request.setAttribute("filtered", 1);
+                        request.setAttribute("table",new UserController().search(type, param, false));
+                    }else{
+                        if(type==5){
+                            int state = Integer.parseInt(request.getParameter("filterSelect"));
+                            String param = state==1 ? "Activo":"Inactivo";
+                            request.setAttribute("table",new UserController().search(type, param, false));
+                        }else{
+                            String param = request.getParameter("filterSelect");
+                            request.setAttribute("table",new UserController().search(type, param, false));
+                        }
+                        request.setAttribute("filtered", 1);
+                    }
+                    
+                }
      
-                //obteniendo todos los datos
-                String name = request.getParameter("name").trim();
-                String lastname = request.getParameter("lastname").trim();
-                String email  = request.getParameter("email").trim();
-                String pass = request.getParameter("pass").trim();
-                int user_type = Integer.parseInt(request.getParameter("user_type"));
-                int state = Integer.parseInt(request.getParameter("state"));
+                
                 
                 //si es agregar
                 if(crud.equals("Agregar")){
+                        //obteniendo todos los datos
+                    String name = request.getParameter("name").trim();
+                    String lastname = request.getParameter("lastname").trim();
+                    String email  = request.getParameter("email").trim();
+                    String pass = request.getParameter("pass").trim();
+                    int user_type = Integer.parseInt(request.getParameter("user_type"));
+                    int state = Integer.parseInt(request.getParameter("state"));
+                    message="Usuario almacenado";
                     boolean flag = true;
                     if(name.isEmpty()){
                         request.setAttribute("nameE","Nombre: no se permiten campos vacios");
@@ -99,7 +121,10 @@ public class AdminUsersServlet extends HttpServlet {
                         boolean temp;
                         temp = state==1;
                         
-                        new UserController().addUser(name, lastname, email, pass,user_type,temp);
+                        if(!new UserController().addUser(name, lastname, email, pass,user_type,temp)){
+                            message = "Error al almacenar usuario";
+                            status= "error";
+                        }
                     }
                     
                     //estableciendo la accion a agregar
@@ -107,7 +132,15 @@ public class AdminUsersServlet extends HttpServlet {
                 }
                 //si es actualizar
                 if(crud.equals("Modificar")){
+                    message = "Usuario modificado";
                     int id = Integer.parseInt(request.getParameter("id"));
+                        //obteniendo todos los datos
+                    String name = request.getParameter("name").trim();
+                    String lastname = request.getParameter("lastname").trim();
+                    String email  = request.getParameter("email").trim();
+                    String pass = request.getParameter("pass").trim();
+                    int user_type = Integer.parseInt(request.getParameter("user_type"));
+                    int state = Integer.parseInt(request.getParameter("state"));
                     boolean flag = true;
                     if(name.isEmpty()){
                         request.setAttribute("nameE","Nombre: no se permiten campos vacios");
@@ -126,22 +159,24 @@ public class AdminUsersServlet extends HttpServlet {
                     }
                     if(flag){
                         boolean temp;
-                        if(state==1){
-                            temp=true;
-                        }else{
-                            temp=false;
-                        }
+                        temp = state==1;
                         
-                        new UserController().updateUser(id,name, lastname, email, pass,user_type,temp);
+                        if(!new UserController().updateUser(id,name, lastname, email, pass,user_type,temp)){
+                            message = "Error al modificar usuario";
+                            status= "error";
+                        }
                     }
                     //estableciendo la accion a agregar
                     request.setAttribute("mode", "add");
                 }
+                
             }catch(Exception ex){
                 ex.printStackTrace();
             }
             
             //retornando las operaciones
+            request.setAttribute("message", message);
+            request.setAttribute("status", status);
             request.getRequestDispatcher("/admin/users.jsp").forward(request, response);
         }
     }

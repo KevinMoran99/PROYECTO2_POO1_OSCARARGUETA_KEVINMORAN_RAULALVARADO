@@ -221,23 +221,23 @@ public class UserController {
             
             switch (type) {
                 case UserController.BY_NAME:
-                    cmd = this.conn.prepareStatement("SELECT * FROM users WHERE name LIKE ?" + actCondition);
+                    cmd = this.conn.prepareStatement("SELECT u.*,t.* FROM users u inner join user_types t on u.user_type_id = t.id WHERE u.name LIKE ?" + actCondition);
                     cmd.setString(1, String.valueOf("%" + param + "%"));
                     break;
                 case UserController.BY_LASTNAME:
-                    cmd = this.conn.prepareStatement("SELECT * FROM users WHERE lastname LIKE ?" + actCondition);
+                    cmd = this.conn.prepareStatement("SELECT u.*,t.* FROM users u inner join user_types t on u.user_type_id = t.id WHERE u.lastname LIKE ?" + actCondition);
                     cmd.setString(1, String.valueOf("%" + param + "%"));
                     break;
                 case UserController.BY_EMAIL:
-                    cmd = this.conn.prepareStatement("SELECT * FROM users WHERE email LIKE ?" + actCondition);
+                    cmd = this.conn.prepareStatement("SELECT u.*,t.* FROM users u inner join user_types t on u.user_type_id = t.id WHERE u.email LIKE ?" + actCondition);
                     cmd.setString(1, String.valueOf("%" + param + "%"));
                     break;
                 case UserController.BY_USER_TYPE:
-                    cmd = this.conn.prepareStatement("SELECT * FROM users WHERE user_type_id LIKE ?" + actCondition);
+                    cmd = this.conn.prepareStatement("SELECT u.*,t.* FROM users u inner join user_types t on u.user_type_id = t.id WHERE u.user_type_id LIKE ?" + actCondition);
                     cmd.setString(1, String.valueOf("%" + param + "%"));
                     break;
                 case UserController.BY_STATE:
-                    cmd = this.conn.prepareStatement("SELECT * FROM users WHERE state = ?");
+                    cmd = this.conn.prepareStatement("SELECT u.*,t.* FROM users u inner join user_types t on u.user_type_id = t.id WHERE u.state = ?");
                     if ((String.valueOf(param)).equals("Activo")){
                         cmd.setInt(1, 1);
                     }else{
@@ -245,14 +245,13 @@ public class UserController {
                     }
                     break;
                 default:
-                    cmd = this.conn.prepareStatement("SELECT * FROM user WHERE true" + actCondition);
+                    cmd = this.conn.prepareStatement("SELECT u.*,t.* FROM user u inner join user_types t on u.user_type_id = t.id WHERE true" + actCondition);
                     break;
             }
             
             ResultSet rs = cmd.executeQuery();
             while (rs.next()) {
-                User_type temp = new User_type();
-                temp.setId(rs.getInt(6));
+                User_type temp = new User_type(rs.getInt(8),rs.getString(9));
                 resp.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3),rs.getString(4),rs.getString(5),temp,rs.getBoolean(7)));
             }
         } catch (SQLException ex) {
