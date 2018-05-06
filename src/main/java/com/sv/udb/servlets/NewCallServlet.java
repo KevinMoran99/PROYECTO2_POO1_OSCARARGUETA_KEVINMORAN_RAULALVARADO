@@ -162,10 +162,13 @@ public class NewCallServlet extends HttpServlet {
                     request.getRequestDispatcher("/personal/newcall.jsp").forward(request, response);
                 }
             }
+            else {
+                request.getRequestDispatcher("/personal/newcall.jsp").forward(request, response);
+            }
         }
         catch(Exception e) {
             PrintWriter out = response.getWriter();
-            out.println("ur mom gay");
+            out.println("Error: " + e.getMessage());
         }
     }
 

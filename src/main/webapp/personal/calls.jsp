@@ -4,6 +4,8 @@
     Author     : kevin
 --%>
 
+<%@page import="com.sv.udb.controllers.ComplaintTypeController"%>
+<%@page import="com.sv.udb.controllers.SchoolController"%>
 <%@page import="com.sv.udb.controllers.CallController"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -26,11 +28,11 @@
             </div>
             <hr>
             <div class="content">
-                <form method="POST" action="PrestamoServlet" name="filter">
-                    <div class="row">
+                <form method="POST" id="filterForm" name="filter">
+                    <div class="row" style="margin-bottom: 5px;">
                         <div class="col-md-3 text-right">Buscar por:</div>
                         <div class="col-md-3">
-                            <select class="form-control" name="filterType" id="filterType">
+                            <select class="form-control" name="filterType" id="filterType" onchange="filterTable();">
                                 <option value="0">N/A</option>
                                 <option value="1">Escuela</option>
                                 <option value="2">Tipo</option>
@@ -40,20 +42,8 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <div class="form-group">
-                            <c:choose>
-                                <c:when test="true">
-                                    <!--Mostrar con Descripción-->
-                                    <input type="text" class="form-control" name="filterArg" id="filterArg"/>
-                                </c:when>
-                                <c:otherwise>
-                                    <!--Mostrar con Escuela, Tipo y Viable-->
-                                    <select class="form-control" name="filterArg" id="filterArg">
-                                        <option value="0">Es viable</option>
-                                        <option value="1">No es viable</option>
-                                    </select>
-                                </c:otherwise>
-                            </c:choose>
+                            <div id="filterSelect" class="form-group">
+                                <!--Aquí se imprimen los controles de argumento de filtros-->
                             </div>
                         </div>
                     </div>
@@ -94,6 +84,64 @@
         <script>
             $(document).ready(function() {
                 $('select').select2();
+            });
+            
+            //Al elegir un tipo de filtro
+            function filterTable() {
+                var select = $("#filterType");
+                $("#filterSelect").empty();
+                
+                //Al elegir un tipo de busqueda
+                switch(select.val()){
+                    //Por escuelas
+                    case "1":
+                        var markupToAppend = "<select class='form-control' name='filterArg' id='filterArg'>";
+                        <c:forEach var="schoolItem" items="<%=new SchoolController().getAll(true)%>">
+                            markupToAppend += "<option value='${schoolItem.getId()}'>${schoolItem}</option>";
+                        </c:forEach>
+                        markupToAppend += "</select>";
+                        $("#filterSelect").append(markupToAppend); 
+                        break;
+                    //Por tipo de denuncia
+                    case "2":
+                        var markupToAppend = "<select class='form-control' name='filterArg' id='filterArg'>";
+                        <c:forEach var="typeItem" items="<%=new ComplaintTypeController().getAll(true)%>">
+                            markupToAppend += "<option value='${typeItem.getId()}'>${typeItem}</option>";
+                        </c:forEach>
+                        markupToAppend += "</select>";
+                        $("#filterSelect").append(markupToAppend);  
+                        break;
+                    //Por descripción
+                    case "3":
+                        $("#filterSelect").append("<input type='text' class='form-control' name='filterArg' id='ilterArg'/>");
+                        break;
+                    //Por viabilidad
+                    case "4":
+                        $("#filterSelect").append("<select class='form-control' name='filterArg' id='filterArg'>" +
+                                                        "<option value='1'>Es viable</option>" +
+                                                        "<option value='0'>No es viable</option>" +
+                                                    "</select>");  
+                        break;
+                    //Los que no necesitan otro argumento
+                    default:
+                        break;
+                }
+                
+                $('select').select2();
+            };
+            
+            //Al filtrar
+            $("#filterForm").submit(function (e) {
+                e.preventDefault();
+                
+                $.ajax({
+                    method: 'POST',
+                    data: $("#filterForm").serialize() + "&formSubmit=Buscar",
+                    url: "${pageContext.request.contextPath}/CallsServlet",
+                    success: function(result){
+                        $('#tblMain > tbody').html(result);
+                    }
+                });
             });
         </script>
     </body>
