@@ -37,7 +37,11 @@
                     User temp = new UserController().login(usuaLoge.getEmail(), usuaLoge.getPass());
                     if(temp != null){
                         session.setAttribute("session", temp);
-                        response.sendRedirect("admin/users.jsp");
+                        if(temp.getUser_type().getId()==1){
+                            response.sendRedirect("admin/users.jsp");
+                        }else{
+                            response.sendRedirect("personal/calls.jsp");
+                        }
                     }
                 }
             %>
