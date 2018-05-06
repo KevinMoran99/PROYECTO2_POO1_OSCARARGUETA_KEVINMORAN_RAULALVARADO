@@ -61,7 +61,7 @@
                     </div>
                 </form>
                 <br>
-                <form method="POST" action="PrestamoServlet" name="Tabl">
+                <form method="POST" action="${pageContext.request.contextPath}/CallsServlet" name="Tabl">
                     <div class="row">
                         <div class="col-md-12">
                             <display:table id="tblMain" name="<%= new CallController().getAll()%>">

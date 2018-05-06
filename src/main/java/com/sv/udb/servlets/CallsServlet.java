@@ -39,39 +39,58 @@ public class CallsServlet extends HttpServlet {
             boolean isPost = request.getMethod().equals("POST");
             
             if(isPost) {
-                //Acción solicitada
-                String action = request.getParameter("formSubmit");
                 
-                if (action.equals("Buscar")) {
-                    //Obteniendo parámetros
-                    int filterType = Integer.parseInt(request.getParameter("filterType"));
-                    String param = String.valueOf(request.getParameter("filterArg"));
-                    String from = String.valueOf(request.getParameter("filterFrom"));
-                    String to = String.valueOf(request.getParameter("filterTo"));
+                //Si trae un id de denuncia, es porque se quiere ver el detalle de dicha denuncia
+                if(request.getParameter("callId") != null){
+                    /*int id = Integer.parseInt(request.getParameter("userId"));
+                    User u = new UserController().getOne(id);
+                    request.setAttribute("id", u.getId());
+                    request.setAttribute("name", u.getName());
+                    request.setAttribute("lastname", u.getLastname());
+                    request.setAttribute("user_type",u.getUser_type().getId());
+                    request.setAttribute("email", u.getEmail());
+                    request.setAttribute("state",u.isState()?"1":"0");
                     
-                    //Si se eligió "registradas por mí", se tomará el id del usuario logeado
-                    if (filterType == CallController.BY_USER){
-                        /*AAAAA*/param = "2";
-                    }
-                    
-                    //Permite imprimir en el cliente
-                    PrintWriter out = response.getWriter();
-                    
-                    for (Call call : new CallController().search(filterType, param, from, to)) {
-                        out.println("<tr class=\"odd\">");
-                        out.println("<td><input type=\"radio\" name=\"callId\" value=\"" + call.getId() + "\" onchange=\"this.form.submit();\"/></td>");
-                        out.println("<td>" + call.getSchool() + "</td>");
-                        out.println("<td>" + call.getComplaint_type() + "</td>");
-                        out.println("<td>" + call.getDescription() + "</td>");
-                        out.println("<td>" + (call.getViable() ? "Es viable" : "No es viable") + "</td>");
-                        out.println("<td>" + Utils.formatDate(call.getCall_date(), Utils.DATE_UI) + "</td>");
-                        out.println("</tr>");
-                    }
+                    //es una herramienta magica que nos ayudara mas tarde(cambio de texto de boton)
+                    request.setAttribute("mode", "mod");*/
+                    request.getRequestDispatcher("/personal/calldetail.jsp").forward(request, response);
+                }
+                
+                else {
+                    //Acción solicitada
+                    String action = request.getParameter("formSubmit");
 
+                    if (action.equals("Buscar")) {
+                        //Obteniendo parámetros
+                        int filterType = Integer.parseInt(request.getParameter("filterType"));
+                        String param = String.valueOf(request.getParameter("filterArg"));
+                        String from = String.valueOf(request.getParameter("filterFrom"));
+                        String to = String.valueOf(request.getParameter("filterTo"));
+
+                        //Si se eligió "registradas por mí", se tomará el id del usuario logeado
+                        if (filterType == CallController.BY_USER){
+                            /*AAAAA*/param = "2";
+                        }
+
+                        //Permite imprimir en el cliente
+                        PrintWriter out = response.getWriter();
+
+                        for (Call call : new CallController().search(filterType, param, from, to)) {
+                            out.println("<tr class=\"odd\">");
+                            out.println("<td><input type=\"radio\" name=\"callId\" value=\"" + call.getId() + "\" onchange=\"this.form.submit();\"/></td>");
+                            out.println("<td>" + call.getSchool() + "</td>");
+                            out.println("<td>" + call.getComplaint_type() + "</td>");
+                            out.println("<td>" + call.getDescription() + "</td>");
+                            out.println("<td>" + (call.getViable() ? "Es viable" : "No es viable") + "</td>");
+                            out.println("<td>" + Utils.formatDate(call.getCall_date(), Utils.DATE_UI) + "</td>");
+                            out.println("</tr>");
+                        }
+
+                    }
                 }
             }
             else {
-                request.getRequestDispatcher("/personal/newcall.jsp").forward(request, response);
+                request.getRequestDispatcher("/personal/calls.jsp").forward(request, response);
             }
         }
         catch (Exception e) {
