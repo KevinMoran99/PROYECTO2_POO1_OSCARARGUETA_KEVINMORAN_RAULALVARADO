@@ -59,7 +59,7 @@ public class AdminUsersServlet extends HttpServlet {
                     request.setAttribute("state",u.isState()?"1":"0");
                     
                     //es una herramienta magica que nos ayudara mas tarde(cambio de texto de boton)
-                    request.setAttribute("mode", "update");
+                    request.setAttribute("mode", "mod");
                 }
                 
                 //si es accion de crud
@@ -75,7 +75,7 @@ public class AdminUsersServlet extends HttpServlet {
                 String pass = request.getParameter("pass").trim();
                 int user_type = Integer.parseInt(request.getParameter("user_type"));
                 int state = Integer.parseInt(request.getParameter("state"));
-                int id = Integer.parseInt(request.getParameter("id"));
+                
                 //si es agregar
                 if(crud.equals("Agregar")){
                     boolean flag = true;
@@ -107,6 +107,7 @@ public class AdminUsersServlet extends HttpServlet {
                 }
                 //si es actualizar
                 if(crud.equals("Modificar")){
+                    int id = Integer.parseInt(request.getParameter("id"));
                     boolean flag = true;
                     if(name.isEmpty()){
                         request.setAttribute("nameE","Nombre: no se permiten campos vacios");

@@ -203,15 +203,15 @@
                     </div>
                     <div class="pull-right">
                         <c:choose>
-                            <c:when test="${mode == 'add'}">
-                                <input type="submit" class="btn btn-primary" name="formSubmit" value="Agregar"/>
+                            <c:when test="${mode == 'mod'}">
+                                <input type="submit" class="btn btn-primary" name="formSubmit" value="Modificar"/>
                             </c:when>
                             <c:otherwise>
-                                <input type="submit" class="btn btn-primary" name="formSubmit" value="Modificar"/>
+                                <input type="submit" class="btn btn-primary" name="formSubmit" value="Agregar"/>
                             </c:otherwise>
                         </c:choose>
                     </div>
-                </form>
+                </form> 
                             <form method="POST" action="AdminUsersServlet">
                                 <div class="pill-right">
                                     <input type="submit" class="btn" name="formSubmit" value="Limpiar"/>
