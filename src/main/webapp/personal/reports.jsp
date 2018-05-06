@@ -13,10 +13,10 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Reportes</title>
-        <jsp:include page="../WEB-INF/jspf/head.jspf"></jsp:include>
+        <jsp:include page="../WEB-INF/jspf/head.jsp"></jsp:include>
     </head>
     <body>
-        <jsp:include page="../WEB-INF/jspf/navpersonal.jspf"></jsp:include>
+        <jsp:include page="../WEB-INF/jspf/navpersonal.jsp"></jsp:include>
         <div class="wrapper">
             <div class="row">
                 <div class="col-md-12 content">
