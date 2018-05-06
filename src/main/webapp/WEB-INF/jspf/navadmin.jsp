@@ -1,6 +1,8 @@
 
+<%@page import="com.sv.udb.models.User"%>
 <div class="nav-side-menu">
-    <div class="brand">Brand Logo</div>
+    <div class="brand"><%=(session.getAttribute("session") != null ? 
+                    ((User)(session.getAttribute("session"))).getName() : "Username..") %></div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
   
         <div class="menu-list">
