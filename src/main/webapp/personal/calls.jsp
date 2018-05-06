@@ -14,10 +14,10 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Lista de denuncias</title>
-        <jsp:include page="../WEB-INF/jspf/head.jspf"></jsp:include>
+        <jsp:include page="../WEB-INF/jspf/head.jsp"></jsp:include>
     </head>
     <body>
-        <jsp:include page="../WEB-INF/jspf/navpersonal.jspf"></jsp:include>
+        <jsp:include page="../WEB-INF/jspf/navpersonal.jsp"></jsp:include>
         <div class="wrapper">
             <div class="row">
                 <div class="col-md-12 content">
@@ -73,7 +73,7 @@
                 <br>
                 <form method="POST" action="PrestamoServlet" name="Tabl">
                     <div class="row">
-                        <div class="col-md-12" style="height: 180px; overflow-y: auto;">
+                        <div class="col-md-12">
                             <display:table id="tblMain" name="<%= new CallController().getAll()%>">
                                 <display:column title="Ver detalle">
                                     <input type="radio" name="callId" value="${tblMain.id}" onchange="this.form.submit();"/>

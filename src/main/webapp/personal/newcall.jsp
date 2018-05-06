@@ -17,10 +17,10 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Nueva denuncia</title>
-        <jsp:include page="../WEB-INF/jspf/head.jspf"></jsp:include>
+        <jsp:include page="../WEB-INF/jspf/head.jsp"></jsp:include>
     </head>
     <body>
-        <jsp:include page="../WEB-INF/jspf/navpersonal.jspf"></jsp:include>
+        <jsp:include page="../WEB-INF/jspf/navpersonal.jsp"></jsp:include>
         <div class="wrapper">
             <div class="row">
                 <div class="col-md-12 content">
@@ -29,7 +29,7 @@
             </div>
             <hr>
             <div class="content">
-                <form method="POST" action="PrestamoServlet" name="filter">
+                <form id="newCallForm" method="POST" action="${pageContext.request.contextPath}/NewCallServlet" name="add">
                     <div class="row">
                         <div class="col-md-6">
                             <label for="school">Escuela desde la que se reporta:</label>
@@ -42,7 +42,7 @@
                         <div class="col-md-6">
                             <br>
                             <div class="form-check text-center">
-                                <input class="form-check-input big-checkbox" type="checkbox" value="" id="viable" checked>
+                                <input class="form-check-input big-checkbox" type="checkbox" value="1" id="viable" name="viable" onchange="refreshAuthProv();">
                                 <label class="form-check-label" for="viable">
                                     La denuncia es viable
                                 </label>
@@ -54,14 +54,14 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <c:choose>
-                                    <c:when test="true">
+                                    <c:when test="${descriptionE == null}">
                                         <label for="description">Descripción</label>
                                     </c:when>
                                     <c:otherwise>
-                                        <label for="description" class="text-danger">Error</label>
+                                        <label for="description" class="text-danger">${descriptionE}</label>
                                     </c:otherwise>
                                 </c:choose>
-                                <textarea rows="4" cols="50" class="form-control" name="description" id="description" value=""></textarea>
+                                <textarea rows="4" cols="50" class="form-control" name="description" id="description" value="" ></textarea>
                             </div>
                         </div>
                     </div>
@@ -69,7 +69,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label for="complaint_type">Tipo de denuncia:</label>
-                            <select class="form-control" name="complaint_type" id="complaint_type">
+                            <select class="form-control" name="complaint_type" id="complaint_type" onchange="refreshAuthProv();">
                                 <c:forEach var="complaintItem" items="<%=new ComplaintTypeController().getAll(true)%>">
                                     <option value="${complaintItem.getId()}">${complaintItem}</option>
                                 </c:forEach>
@@ -78,31 +78,17 @@
                     </div>
                     <br>
                     <div class="row">
-                        <div class="col-md-12">
-                            <c:choose>
-                                <c:when test="true">
-                                    <label for="authority">Autoridades a notificar:</label>
-                                    <select class="form-control" name="authority[]" id="authority" multiple="multiple">
-                                        <c:forEach var="authorityItem" items="<%=new AuthorityController().getAll(true)%>">
-                                            <option value="${authorityItem.getId()}">${authorityItem}</option>
-                                        </c:forEach>
-                                    </select>
-                                </c:when>
-                                <c:otherwise>
-                                    <label for="provider">Proveedores a notificar:</label>
-                                    <select class="form-control" name="provider[]" id="provider" multiple="multiple">
-                                        <c:forEach var="providerItem" items="<%=new ProviderController().getAll(true)%>">
-                                            <option value="${providerItem.getId()}">${providerItem}</option>
-                                        </c:forEach>
-                                    </select>
-                                </c:otherwise>
-                            </c:choose>
+                        <c:if test="${authprovE != null}">
+                            <label for="description" class="text-danger">${authprovE}</label>
+                        </c:if>
+                        <div id="AuthProv" style="height: 120px; overflow-y: auto;" class="col-md-12">
+                            <!--Aquí se imprime el select de autoridades o de proveedores-->
                         </div>
                     </div>
                     <br>
                     <div class="pull-right">
-                        <input type="submit" class="btn" name="formSubmit" value="Limpiar"/>
-                        <input type="submit" class="btn btn-primary" name="formSubmit" value="Añadir"/>
+                        <input type="submit" class="btn" name="formSubmit" value="Limpiar" formnovalidate/>
+                        <input type="submit" class="btn btn-primary" name="formSubmit" value="Guardar"/>
                     </div>
                 </form>
             </div>
@@ -110,7 +96,27 @@
         <script>
             $(document).ready(function() {
                 $('select').select2();
+                
+                //Si hay mensajes, los muestra
+                if("${message}" !== "") {
+                    var title = "";
+                    title = "${status}" == "success" ? "Operación exitosa" : "Operación denegada";
+                    
+                    swal(title, "${message}", "${status}");
+                }
             });
+            
+            function refreshAuthProv() {
+                $.ajax({
+                    method: "POST",
+                    url: "${pageContext.request.contextPath}/NewCallServlet",
+                    data: $('#newCallForm').serialize() + "&formSubmit=refreshAuthProv",
+                    success: function(result) {
+                        $("#AuthProv").html(result);
+                        $('select').select2();
+                    }
+                });
+            }
         </script>
     </body>
 </html>

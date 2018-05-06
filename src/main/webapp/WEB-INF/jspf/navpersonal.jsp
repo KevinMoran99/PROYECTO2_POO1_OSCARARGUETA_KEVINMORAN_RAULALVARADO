@@ -7,23 +7,23 @@
   
             <ul id="menu-content" class="menu-content collapse out">
                 <li class="active">
-                  <a href="calls.jsp">
+                  <a href="${pageContext.request.contextPath}/personal/calls.jsp">
                       <i class="material-icons">assignment</i> Lista de denuncias
                   </a>
                 </li>
 
                 <li>
-                    <a href="newcall.jsp"><i class="material-icons">phone in talk</i> Nueva denuncia </a>
+                    <a href="${pageContext.request.contextPath}/personal/newcall.jsp"><i class="material-icons">phone in talk</i> Nueva denuncia </a>
                 </li>
 
 
                 <li>
-                    <a href="reports.jsp"><i class="material-icons">picture_as_pdf</i> Reportes </a>
+                    <a href="${pageContext.request.contextPath}/personal/reports.jsp"><i class="material-icons">picture_as_pdf</i> Reportes </a>
                 </li>
 
 
                  <li>
-                  <a href="profile.jsp"><i class="material-icons">person outline</i> Mi perfil </a>
+                  <a href="${pageContext.request.contextPath}/personal/profile.jsp"><i class="material-icons">person outline</i> Mi perfil </a>
                   </li>
 
             </ul>

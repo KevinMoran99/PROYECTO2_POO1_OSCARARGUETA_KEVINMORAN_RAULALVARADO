@@ -7,27 +7,27 @@
   
             <ul id="menu-content" class="menu-content collapse out">
                 <li class="active">
-                  <a href="users.jsp">
+                  <a href="${pageContext.request.contextPath}/admin/users.jsp">
                       <i class="material-icons">person outline</i> Usuarios
                   </a>
                 </li>
 
                 <li>
-                    <a href="complaint_types.jsp"><i class="material-icons">phone in talk</i> Tipos de denuncias </a>
+                    <a href="${pageContext.request.contextPath}/admin/complaint_types.jsp"><i class="material-icons">phone in talk</i> Tipos de denuncias </a>
                 </li>
 
                 <li>
-                    <a href="schools.jsp"><i class="material-icons">school</i> Escuelas </a>
+                    <a href="${pageContext.request.contextPath}/admin/schools.jsp"><i class="material-icons">school</i> Escuelas </a>
                 </li>  
 
 
                 <li>
-                    <a href="authorities.jsp"><i class="material-icons">warning</i> Autoridades </a>
+                    <a href="${pageContext.request.contextPath}/admin/authorities.jsp"><i class="material-icons">warning</i> Autoridades </a>
                 </li>
 
 
                  <li>
-                  <a href="providers.jsp"><i class="material-icons">wifi</i> Proveedores</a>
+                  <a href="${pageContext.request.contextPath}/admin/providers.jsp"><i class="material-icons">wifi</i> Proveedores</a>
                   </li>
 
             </ul>

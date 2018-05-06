@@ -48,6 +48,7 @@ public class AdminUsersServlet extends HttpServlet {
         {
             try{
                 //trae un id de usuario de la tabla?
+                String caca = request.getParameter("userId");
                 if(request.getParameter("userId") != null){
                     int id = Integer.parseInt(request.getParameter("userId"));
                     User u = new UserController().getOne(id);

@@ -14,10 +14,10 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Usuarios</title>
-        <jsp:include page="../WEB-INF/jspf/head.jspf"></jsp:include>
+        <jsp:include page="../WEB-INF/jspf/head.jsp"></jsp:include>
     </head>
     <body>
-        <jsp:include page="../WEB-INF/jspf/navadmin.jspf"></jsp:include>
+        <jsp:include page="../WEB-INF/jspf/navadmin.jsp"></jsp:include>
         <div class="wrapper">
             <div class="row">
                 <div class="col-md-12 content">
@@ -63,7 +63,7 @@
                                 </div>
                             </div>
                         </form>
-                        <form method="POST" action="AdminUsersServlet" name="Tabl">
+                        <form method="POST" action="${pageContext.request.contextPath}/admin/AdminUsersServlet" name="Tabl">
                             <div class="row">
                                 <div class="col-md-12" style="height: 180px; overflow-y: auto;">
                                     <display:table id="tblMain" name="<%= new UserController().getAll(false)%>">
@@ -83,7 +83,7 @@
                         </form>
                     </div>
                 </div>
-                <form method="POST" action="AdminUsersServlet" name="Demo">
+                <form method="POST" action="${pageContext.request.contextPath}/admin/AdminUsersServlet" name="Demo">
                     <input type="hidden" name="id" id="id" value="${id}"/>
                     <div class="row">
                         <div class="col-md-6">
@@ -211,8 +211,8 @@
                             </c:otherwise>
                         </c:choose>
                     </div>
-                </form> 
-                            <form method="POST" action="AdminUsersServlet">
+                </form>
+                            <form method="POST" action="${pageContext.request.contextPath}/admin/AdminUsersServlet">
                                 <div class="pill-right">
                                     <input type="submit" class="btn" name="formSubmit" value="Limpiar"/>
                                 </div>
