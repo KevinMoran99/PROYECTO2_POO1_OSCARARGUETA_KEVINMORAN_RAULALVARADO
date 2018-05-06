@@ -26,12 +26,12 @@ public class CallController {
     Connection conn;
     
     //Constantes que identifican el tipo de búsqueda en search
+    public static final int NO_FIELD = 0;
     public static final int BY_SCHOOL = 1;
     public static final int BY_TYPE = 2;
     public static final int BY_DESCRIPTION = 3;
     public static final int BY_VIABLE = 4;
     public static final int BY_USER = 5;
-    public static final int NO_FIELD = 6;
 
     public CallController() {
         conn = new ConnectionDB().getConn();
@@ -198,7 +198,7 @@ public class CallController {
      * @param to La fecha hasta la que se filtrará
      * @return 
      */
-    public List<Call> search (int type, Object param, String from, String to){
+    public List<Call> search (int type, String param, String from, String to){
         List<Call> resp = new ArrayList<>();
         try {
             //Filtros de fecha
@@ -214,11 +214,11 @@ public class CallController {
             switch (type) {
                 case CallController.BY_SCHOOL:
                     cmd = this.conn.prepareStatement("SELECT * FROM calls WHERE school_id = ?" + from + to);
-                    cmd.setInt(1, ((School)param).getId());
+                    cmd.setInt(1, Integer.parseInt(param));
                     break;
                 case CallController.BY_TYPE:
                     cmd = this.conn.prepareStatement("SELECT * FROM calls WHERE complaint_id = ?" + from + to);
-                    cmd.setInt(1, ((Complaint_type)param).getId());
+                    cmd.setInt(1, Integer.parseInt(param));
                     break;
                 case CallController.BY_DESCRIPTION:
                     cmd = this.conn.prepareStatement("SELECT * FROM calls WHERE description LIKE ?" + from + to);
@@ -226,14 +226,11 @@ public class CallController {
                     break;
                 case CallController.BY_VIABLE:
                     cmd = this.conn.prepareStatement("SELECT * FROM calls WHERE viable = ?" + from + to);
-                    if ((String.valueOf(param)).equals("Es viable"))
-                        cmd.setInt(1, 1);
-                    else
-                        cmd.setInt(1, 0);
+                    cmd.setInt(1, Integer.parseInt(param));
                     break;
                 case CallController.BY_USER:
                     cmd = this.conn.prepareStatement("SELECT * FROM calls WHERE user_id = ?" + from + to);
-                    cmd.setInt(1, ((User)param).getId());
+                    cmd.setInt(1, Integer.parseInt(param));
                     break;
                 default:
                     cmd = this.conn.prepareStatement("SELECT * FROM calls WHERE true" + from + to);
