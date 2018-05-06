@@ -63,7 +63,7 @@
                                 </div>
                             </div>
                         </form>
-                        <form method="POST" action="PrestamoServlet" name="Tabl">
+                        <form method="POST" action="AdminUsersServlet" name="Tabl">
                             <div class="row">
                                 <div class="col-md-12" style="height: 180px; overflow-y: auto;">
                                     <display:table id="tblMain" name="<%= new UserController().getAll(false)%>">
@@ -83,33 +83,33 @@
                         </form>
                     </div>
                 </div>
-                <form method="POST" action="WarehouseServ" name="Demo">
-                    <input type="hidden" name="id" id="id" value=""/>
+                <form method="POST" action="AdminUsersServlet" name="Demo">
+                    <input type="hidden" name="id" id="id" value="${id}"/>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <c:choose>
-                                    <c:when test="true">
+                                    <c:when test="${nameE == null}">
                                         <label for="name">Nombre:</label>
                                     </c:when>
                                     <c:otherwise>
-                                        <label for="name" class="text-danger">Error</label>
+                                        <label for="name" class="text-danger">${nameE}</label>
                                     </c:otherwise>
                                 </c:choose>
-                                <input type="text" class="form-control" name="name" id="name" value=""/>
+                                     <input type="text" required class="form-control" name="name" id="name" value="${name}" minlength="2"/>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <c:choose>
-                                    <c:when test="true">
-                                        <label for="lastname">Apellido</label>
+                                    <c:when test="${lastnameE == null}">
+                                        <label for="lastname">Apellidos</label>
                                     </c:when>
                                     <c:otherwise>
-                                        <label for="lastname" class="text-danger">Error</label>
+                                        <label for="lastname" class="text-danger">${lastnameE}</label>
                                     </c:otherwise>
                                 </c:choose>
-                                <input type="text" class="form-control" name="lastname" id="lastname" value=""/>
+                                <input type="text" required class="form-control" name="lastname" id="lastname" value="${lastname}" minlength="2"/>
                             </div>
                         </div>
                     </div>
@@ -117,27 +117,34 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <c:choose>
-                                    <c:when test="true">
+                                    <c:when test="${emailE == null}">
                                         <label for="email">Email:</label>
                                     </c:when>
                                     <c:otherwise>
-                                        <label for="email" class="text-danger">Error</label>
+                                        <label for="email" class="text-danger">${emailE}</label>
                                     </c:otherwise>
                                 </c:choose>
-                                <input type="email" class="form-control" name="email" id="email" value=""/>
+                                        <input type="email" class="form-control" name="email" id="email" value="${email}" required minlength="7"/>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <c:choose>
-                                    <c:when test="true">
+                                    <c:when test="${passE == null}">
                                         <label for="pass">Contraseña</label>
                                     </c:when>
                                     <c:otherwise>
-                                        <label for="pass" class="text-danger">Error</label>
+                                        <label for="pass" class="text-danger">${passE}</label>
                                     </c:otherwise>
                                 </c:choose>
-                                <input type="password" class="form-control" name="pass" id="pass" value=""/>
+                                    <c:choose>
+                                        <c:when test="${mode == 'add'}">
+                                            <input type="password" class="form-control" name="pass" id="pass" value="" required minlength="7"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <input type="password" class="form-control" name="pass" id="pass" value="" minlength="7"/>
+                                        </c:otherwise>
+                                    </c:choose>
                             </div>
                         </div>
                     </div>
@@ -145,41 +152,59 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <c:choose>
-                                    <c:when test="true">
+                                    <c:when test="${typeE == null}">
                                         <label for="user_type">Tipo de usuario:</label>
                                     </c:when>
                                     <c:otherwise>
-                                        <label for="user_type" class="text-danger">Error</label>
+                                        <label for="user_type" class="text-danger">${typeE}</label>
                                     </c:otherwise>
                                 </c:choose>
-                                <select class="form-control" name="user_type" id="user_type">
-                                    <option value="0">Administrador</option>
-                                    <option value="1">Personal</option>
+                                <select class="form-control" name="user_type" id="user_type" required>
+                                    <c:choose>
+                                        <c:when test="${user_type == 1}">
+                                            <option value="1" selected>Administrador</option>
+                                            <option value="2">Personal</option>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <option value="1">Administrador</option>
+                                            <option value="2" selected>Personal</option>
+                                        </c:otherwise>    
+                                    </c:choose>
+                                    
+                                    
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <c:choose>
-                                    <c:when test="true">
+                                    <c:when test="${stateE == null}">
                                         <label for="state">Estado</label>
                                     </c:when>
                                     <c:otherwise>
-                                        <label for="state" class="text-danger">Error</label>
+                                        <label for="state" class="text-danger">${stateE}</label>
                                     </c:otherwise>
                                 </c:choose>
-                                <select class="form-control" name="state" id="state">
-                                    <option value="0">Activo</option>
-                                    <option value="1">Inactivo</option>
+                                <select class="form-control" name="state" id="state" required>
+                                    <c:choose>
+                                        <c:when test="${state == 0}">
+                                            <option value="0" selected>Inactivo</option>
+                                            <option value="1">Activo</option>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <option value="0">Inactivo</option>
+                                            <option value="1" selected>Activo</option>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    
                                 </select>
                             </div>
                         </div>
                     </div>
                     <div class="pull-right">
-                        <input type="submit" class="btn" name="formSubmit" value="Limpiar"/>
                         <c:choose>
-                            <c:when test="true">
-                                <input type="submit" class="btn btn-primary" name="formSubmit" value="Añadir"/>
+                            <c:when test="${mode == 'add'}">
+                                <input type="submit" class="btn btn-primary" name="formSubmit" value="Agregar"/>
                             </c:when>
                             <c:otherwise>
                                 <input type="submit" class="btn btn-primary" name="formSubmit" value="Modificar"/>
@@ -187,6 +212,11 @@
                         </c:choose>
                     </div>
                 </form>
+                            <form method="POST" action="AdminUsersServlet">
+                                <div class="pill-right">
+                                    <input type="submit" class="btn" name="formSubmit" value="Limpiar"/>
+                                </div>
+                            </form>
             </div>
         </div>
     </body>
