@@ -39,7 +39,7 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading">Editar información</div>
                     <div class="panel-body">
-                        <form method="POST" action="PrestamoServlet" name="profile">
+                        <form method="POST" action="UserUpdateServlet" name="profile" id="formUpdate">
                             <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -51,7 +51,7 @@
                                                     <label for="name" class="text-danger">Error</label>
                                                 </c:otherwise>
                                             </c:choose>
-                                            <input type="text" class="form-control" name="name" id="name" value=""/>
+                                                    <input type="text" class="form-control" name="name" id="name" value="<%= p.getName() %>"/>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -64,7 +64,7 @@
                                                     <label for="lastname" class="text-danger">Error</label>
                                                 </c:otherwise>
                                             </c:choose>
-                                            <input type="text" class="form-control" name="lastname" id="lastname" value=""/>
+                                            <input type="text" class="form-control" name="lastname" id="lastname" value="<%= p.getLastname() %>"/>
                                         </div>
                                     </div>
                                 </div>
@@ -79,7 +79,7 @@
                                                     <label for="email" class="text-danger">Error</label>
                                                 </c:otherwise>
                                             </c:choose>
-                                            <input type="email" class="form-control" name="email" id="email" value=""/>
+                                            <input type="email" class="form-control" name="email" id="email" value="<%= p.getEmail() %>"/>
                                         </div>
                                     </div>
                                 </div>
@@ -94,7 +94,7 @@
                                                     <label for="pass" class="text-danger">Error</label>
                                                 </c:otherwise>
                                             </c:choose>
-                                            <input type="password" class="form-control" name="pass" id="pass" value=""/>
+                                                    <input type="password" class="form-control" name="pass" id="pass" value="" minlength="7"/>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -107,19 +107,43 @@
                                                     <label for="passConfirm" class="text-danger">Error</label>
                                                 </c:otherwise>
                                             </c:choose>
-                                            <input type="password" class="form-control" name="passConfirm" id="passConfirm" value=""/>
+                                                    <input type="password" class="form-control" name="passConfirm" id="passConfirm" value="" minlength="7"/>
                                         </div>
                                     </div>
                                 </div>
                             <div class="pull-right">
-                                <input type="submit" class="btn" value="Limpiar">
-                                <input type="submit" class="btn btn-primary" value="Guardar cambios">
+                                <input type="submit" class="btn btn-primary" name="formSubmit" value="Guardar cambios">
                             </div>
+                        </form>
+                        <form method="POST" action="UserUpdateServlet">
+                                    <div class="pill-right">
+                                        <input type="submit" class="btn" name="formSubmit" value="Limpiar campos"/>
+                                    </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
+        <script>
+            $(document).ready(function() {
+                //Si hay mensajes, los muestra
+                if("${message}" !== "") {
+                    var title = "";
+                    title = "${status}" == "success" ? "Operación exitosa" : "Operación denegada";
+                    
+                    swal(title, "${message}", "${status}");
+                }
+            });
+            
+            $("#formUpdate").submit(function(e){
+                if($("#pass").val().trim() !== "" || $("#passConfirm").val().trim() !==""){
+                    if($("#pass").val() !== $("#passConfirm").val()){
+                       swal("Error", "Las claves no coinciden", "error");
+                       e.preventDefault();
+                    }
+                }
+            });
+        </script>
     </body>
 </html>
 
