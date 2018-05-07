@@ -47,12 +47,13 @@ state bool not null default 1
 create table calls(
 id int not null primary key auto_increment,
 school_id int not null,
-viable bool not null default 1,
+viable bool not null default 0,
 complaint_id int not null,
-user_id int not null,
-description text not null,
+user_id int not null default 1,
+description text not null default '',
 call_date date not null,
 talk_given bool not null default 0,
+code varchar(15) not null,
 foreign key (school_id) references schools(id),
 foreign key (complaint_id) references complaint_types(id),
 foreign key (user_id) references users(id)

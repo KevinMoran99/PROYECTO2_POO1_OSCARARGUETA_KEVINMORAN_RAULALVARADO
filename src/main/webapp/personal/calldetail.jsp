@@ -33,7 +33,7 @@
         <div class="wrapper">
             <div class="row">
                 <div class="col-md-8 content">
-                    <h1>Detalle de denuncia</h1>
+                    <h1>Detalle de denuncia: ${code}</h1>
                 </div>
                 <c:if test="${!viable}">
                     <div class="col-md-4 content">

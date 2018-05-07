@@ -6,6 +6,7 @@
 package com.sv.udb.utilities;
 
 import java.awt.Component;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -70,5 +71,20 @@ public class Utils {
         comp.setMinimumSize(comp.getPreferredSize());
         comp.setSize(comp.getPreferredSize());
         comp.revalidate();
+    }
+    
+    private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private static SecureRandom rnd = new SecureRandom();
+    
+    /**
+     * Genera un string aleatorio con la longitud especificada
+     * @param len La longitud del string
+     * @return 
+     */
+    public static String randomString( int len ){
+        StringBuilder sb = new StringBuilder( len );
+        for( int i = 0; i < len; i++ ) 
+           sb.append( AB.charAt( rnd.nextInt(AB.length()) ) );
+        return sb.toString();
     }
 }

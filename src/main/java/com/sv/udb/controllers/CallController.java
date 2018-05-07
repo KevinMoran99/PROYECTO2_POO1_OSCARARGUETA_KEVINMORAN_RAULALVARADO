@@ -9,7 +9,9 @@ import com.sv.udb.models.Call;
 import com.sv.udb.models.Complaint_type;
 import com.sv.udb.models.School;
 import com.sv.udb.models.User;
+import com.sv.udb.models.User_type;
 import com.sv.udb.resources.ConnectionDB;
+import com.sv.udb.utilities.Utils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,11 +29,13 @@ public class CallController {
     
     //Constantes que identifican el tipo de búsqueda en search
     public static final int NO_FIELD = 0;
-    public static final int BY_SCHOOL = 1;
-    public static final int BY_TYPE = 2;
-    public static final int BY_DESCRIPTION = 3;
-    public static final int BY_VIABLE = 4;
-    public static final int BY_USER = 5;
+    public static final int NEW = 1;
+    public static final int BY_CODE = 2;
+    public static final int BY_SCHOOL = 3;
+    public static final int BY_TYPE = 4;
+    public static final int BY_DESCRIPTION = 5;
+    public static final int BY_VIABLE = 6;
+    public static final int BY_USER = 7;
 
     public CallController() {
         conn = new ConnectionDB().getConn();
@@ -51,7 +55,8 @@ public class CallController {
                     new UserController().getOne(rs.getInt(5)),
                     rs.getString(6),
                     rs.getDate(7),
-                    rs.getBoolean(8))
+                    rs.getBoolean(8),
+                    rs.getString(9))
                 );
             }
         } catch (SQLException ex) {
@@ -85,7 +90,8 @@ public class CallController {
                         new UserController().getOne(rs.getInt(5)),
                         rs.getString(6),
                         rs.getDate(7),
-                        rs.getBoolean(8));
+                        rs.getBoolean(8),
+                        rs.getString(9));
             }
         } catch (SQLException ex) {
             System.err.println("Error al consultar denuncia: " + ex.getMessage());
@@ -103,16 +109,35 @@ public class CallController {
         return resp;
     }
     
+    //Genera el código de denuncia necesario para crear una nueva denuncia
+    private String generateCode() {
+        return Utils.randomString(8) + String.valueOf(this.getLast().getId() + 1);
+    }
+    
     public boolean addCall (School school, boolean viable, Complaint_type complaint_type, User user, String description) {
         boolean resp = false;
+        //Generando código de denuncia
+        String code = this.generateCode();
+        
+        //Si la conexión fue cerrada gracias a generateCode(), la vuelve a abrir
+        try {
+            if (this.conn != null) {
+                if (this.conn.isClosed()) {
+                    this.conn = new ConnectionDB().getConn();
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al reabrir la conexion al agregar denuncia: " + e.getMessage());
+        }
         
         try {
-            PreparedStatement cmd = this.conn.prepareStatement("INSERT INTO calls VALUES(null,?,?,?,?,?,NOW(),0)");
+            PreparedStatement cmd = this.conn.prepareStatement("INSERT INTO calls VALUES(null,?,?,?,?,?,NOW(),0,?)");
             cmd.setInt(1, school.getId());
             cmd.setBoolean(2, viable);
             cmd.setInt(3, complaint_type.getId());
             cmd.setInt(4, user.getId());
             cmd.setString(5, description);
+            cmd.setString(6,code);
             cmd.executeUpdate();
             resp = true;
         } catch (Exception ex) {
@@ -163,7 +188,7 @@ public class CallController {
         try {
             PreparedStatement cmd = this.conn.prepareStatement("SELECT * FROM calls WHERE id = (SELECT MAX(id) FROM calls)");
             ResultSet rs = cmd.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 resp = new Call(
                         rs.getInt(1), 
                         new SchoolController().getOne(rs.getInt(2)),
@@ -172,7 +197,20 @@ public class CallController {
                         new UserController().getOne(rs.getInt(5)),
                         rs.getString(6),
                         rs.getDate(7),
-                        rs.getBoolean(8));
+                        rs.getBoolean(8),
+                        rs.getString(9));
+            }
+            else { //Si no se encontraron resultados, devuelve un objeto con datos vacíos
+                resp = new Call(
+                        0, 
+                        new School(0, "", "", false),
+                        false,
+                        new Complaint_type(0, "", "", false),
+                        new User(0, "", "", "", "", new User_type(0, ""), false),
+                        "",
+                        new Date(),
+                        false,
+                        "");
             }
         } catch (SQLException ex) {
             System.err.println("Error al consultar denuncia: " + ex.getMessage());
@@ -212,6 +250,13 @@ public class CallController {
             PreparedStatement cmd = null;
             
             switch (type) {
+                case CallController.NEW:
+                    cmd = this.conn.prepareStatement("SELECT * FROM calls WHERE user_id = 1" + from + to);
+                    break;
+                case CallController.BY_CODE:
+                    cmd = this.conn.prepareStatement("SELECT * FROM calls WHERE code LIKE ?" + from + to);
+                    cmd.setString(1, String.valueOf("%" + param + "%"));
+                    break;
                 case CallController.BY_SCHOOL:
                     cmd = this.conn.prepareStatement("SELECT * FROM calls WHERE school_id = ?" + from + to);
                     cmd.setInt(1, Integer.parseInt(param));
@@ -246,7 +291,8 @@ public class CallController {
                     new UserController().getOne(rs.getInt(5)),
                     rs.getString(6),
                     rs.getDate(7),
-                    rs.getBoolean(8))
+                    rs.getBoolean(8),
+                    rs.getString(9))
                 );
             }
         } catch (SQLException ex) {

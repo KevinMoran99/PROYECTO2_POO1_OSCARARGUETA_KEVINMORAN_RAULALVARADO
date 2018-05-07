@@ -45,11 +45,13 @@
                         <div class="col-md-3">
                             <select class="form-control" name="filterType" id="filterType" onchange="filterTable();">
                                 <option value="0">N/A</option>
-                                <option value="1">Escuela</option>
-                                <option value="2">Tipo</option>
-                                <option value="3">Descripción</option>
-                                <option value="4">Viable</option>
-                                <option value="5">Registradas por mí</option>
+                                <option value="1">Sin procesar</option>
+                                <option value="2">Código</option>
+                                <option value="3">Escuela</option>
+                                <option value="4">Tipo</option>
+                                <option value="5">Descripción</option>
+                                <option value="6">Viable</option>
+                                <option value="7">Registradas por mí</option>
                             </select>
                         </div>
                         <div class="col-md-3">
@@ -79,11 +81,19 @@
                                 <display:column title="Ver detalle">
                                     <input type="radio" name="callId" value="${tblMain.id}" onchange="this.form.submit();"/>
                                 </display:column>
+                                <display:column property="code" title="Código" sortable="true" />
                                 <display:column property="school" title="Escuela" sortable="true" />
                                 <display:column property="complaint_type" title="Tipo" sortable="true" />
                                 <display:column property="description" title="Descripción" sortable="true" />
                                 <display:column title="Viable" sortable="true">
-                                    <c:choose><c:when test="${tblMain.viable}">Es viable</c:when><c:otherwise>No es viable</c:otherwise></c:choose>
+                                    <c:choose>
+                                        <c:when test="${tblMain.user.id == 1}">
+                                            Sin procesar
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:choose><c:when test="${tblMain.viable}">Es viable</c:when><c:otherwise>No es viable</c:otherwise></c:choose>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </display:column>
                                 <display:column property="call_date" title="Fecha" sortable="true" format="{0,date,dd/MM/yyyy}" />
                             </display:table>
@@ -105,7 +115,7 @@
                 //Al elegir un tipo de busqueda
                 switch(select.val()){
                     //Por escuelas
-                    case "1":
+                    case "3":
                         var markupToAppend = "<select class='form-control' name='filterArg' id='filterArg'>";
                         <c:forEach var="schoolItem" items="<%=new SchoolController().getAll(true)%>">
                             markupToAppend += "<option value='${schoolItem.getId()}'>${schoolItem}</option>";
@@ -114,7 +124,7 @@
                         $("#filterSelect").append(markupToAppend); 
                         break;
                     //Por tipo de denuncia
-                    case "2":
+                    case "4":
                         var markupToAppend = "<select class='form-control' name='filterArg' id='filterArg'>";
                         <c:forEach var="typeItem" items="<%=new ComplaintTypeController().getAll(true)%>">
                             markupToAppend += "<option value='${typeItem.getId()}'>${typeItem}</option>";
@@ -122,12 +132,13 @@
                         markupToAppend += "</select>";
                         $("#filterSelect").append(markupToAppend);  
                         break;
-                    //Por descripción
-                    case "3":
-                        $("#filterSelect").append("<input type='text' class='form-control' name='filterArg' id='ilterArg'/>");
+                    //Por código o descripción
+                    case "2":
+                    case "5":
+                        $("#filterSelect").append("<input type='text' class='form-control' name='filterArg' id='filterArg'/>");
                         break;
                     //Por viabilidad
-                    case "4":
+                    case "6":
                         $("#filterSelect").append("<select class='form-control' name='filterArg' id='filterArg'>" +
                                                         "<option value='1'>Es viable</option>" +
                                                         "<option value='0'>No es viable</option>" +

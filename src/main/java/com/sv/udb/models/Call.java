@@ -20,11 +20,12 @@ public class Call {
     String description;
     Date call_date;
     boolean talk_given;
+    String code;
 
     public Call() {
     }
     
-    public Call(int id, School school, boolean viable, Complaint_type complaint_type, User user, String description, Date call_date, boolean talk_given) {
+    public Call(int id, School school, boolean viable, Complaint_type complaint_type, User user, String description, Date call_date, boolean talk_given, String code) {
         this.id = id;
         this.school = school;
         this.viable = viable;
@@ -33,6 +34,7 @@ public class Call {
         this.description = description;
         this.call_date = call_date;
         this.talk_given = talk_given;
+        this.code = code;
     }
     
 
@@ -98,6 +100,14 @@ public class Call {
 
     public void setTalk_given(boolean talk_given) {
         this.talk_given = talk_given;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
     
     @Override

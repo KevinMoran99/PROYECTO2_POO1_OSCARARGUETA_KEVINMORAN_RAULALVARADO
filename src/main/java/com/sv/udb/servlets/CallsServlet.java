@@ -56,6 +56,7 @@ public class CallsServlet extends HttpServlet {
                     request.setAttribute("call_date",call.getCall_date());
                     request.setAttribute("taken_action",call.getComplaint_type().getTaken_action());
                     request.setAttribute("talk_given",call.isTalk_given());
+                    request.setAttribute("code",call.getCode());
                     
                     //Guardando denuncia en sesión, servirá para modificarla si lo requiere en la vista de calldetail
                     request.getSession().setAttribute("call", call);
@@ -86,10 +87,11 @@ public class CallsServlet extends HttpServlet {
                         for (Call call : new CallController().search(filterType, param, from, to)) {
                             out.println("<tr class=\"odd\">");
                             out.println("<td><input type=\"radio\" name=\"callId\" value=\"" + call.getId() + "\" onchange=\"this.form.submit();\"/></td>");
+                            out.println("<td>" + call.getCode() + "</td>");
                             out.println("<td>" + call.getSchool() + "</td>");
                             out.println("<td>" + call.getComplaint_type() + "</td>");
                             out.println("<td>" + call.getDescription() + "</td>");
-                            out.println("<td>" + (call.getViable() ? "Es viable" : "No es viable") + "</td>");
+                            out.println("<td>" + (call.getUser().getId() == 1 ? "Sin procesar" : (call.getViable() ? "Es viable" : "No es viable")) + "</td>");
                             out.println("<td>" + Utils.formatDate(call.getCall_date(), Utils.DATE_UI) + "</td>");
                             out.println("</tr>");
                         }

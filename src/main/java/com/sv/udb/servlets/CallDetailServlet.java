@@ -92,6 +92,7 @@ public class CallDetailServlet extends HttpServlet {
                     request.setAttribute("call_date",call.getCall_date());
                     request.setAttribute("taken_action",call.getComplaint_type().getTaken_action());
                     request.setAttribute("talk_given",call.isTalk_given());
+                    request.setAttribute("code",call.getCode());
                     request.getSession().setAttribute("call", call);
                     
                     //Añadiendo parámetros de output
