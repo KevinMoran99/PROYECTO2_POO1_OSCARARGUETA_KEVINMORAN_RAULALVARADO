@@ -7,6 +7,9 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/webjars/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/webjars/select2/4.0.3/js/select2.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/webjars/sweetalert/1.0.0/sweetalert.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/lib/pdfjs/build/pdf.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/lib/js/pdfobject.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/lib/js/report.js"></script>
 <style>
     .content {
         padding-left: 25px;
@@ -46,6 +49,13 @@
     textarea {
         resize: none;
     }
+    
+    .pdfobject-container {
+            width: 100%;
+            height: 600px;
+            margin: 2em 0;
+    }
+    .pdfobject { border: solid 1px #666; }
     
     .nav-side-menu .material-icons{
         padding-right: 35px;
