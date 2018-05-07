@@ -29,6 +29,17 @@
                 </form><!-- /form -->
             </div><!-- /card-container -->
         </div><!-- /container -->
+        <script>
+            $(document).ready(function() {
+                //Si hay mensajes, los muestra
+                if("${message}" !== "") {
+                    var title = "";
+                    title = "${status}" == "success" ? "Operación exitosa" : "Operación denegada";
+                    
+                    swal(title, "${message}", "${status}");
+                }
+            });
+        </script>
         <%
                 Object usua = request.getAttribute("objeUsua");
                 User usuaLoge = usua != null ? (User)usua : null;

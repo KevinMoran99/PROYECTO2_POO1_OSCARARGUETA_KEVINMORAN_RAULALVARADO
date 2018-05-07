@@ -4,6 +4,7 @@
     Author     : kevin
 --%>
 
+<%@page import="com.sv.udb.models.User"%>
 <%@page import="com.sv.udb.controllers.ComplaintTypeController"%>
 <%@page import="com.sv.udb.controllers.SchoolController"%>
 <%@page import="com.sv.udb.controllers.CallController"%>
@@ -11,6 +12,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://displaytag.sf.net" prefix="display"%>
+<%
+    User p =(User)(request.getSession().getAttribute("session"));
+    if(p==null){
+        response.sendRedirect("/PROYECTO2_POO1_OSCARARGUETA_KEVINMORAN_RAULALVARADO");
+    }else{
+        if(p.getUser_type().getId() !=2){
+            response.sendRedirect("/PROYECTO2_POO1_OSCARARGUETA_KEVINMORAN_RAULALVARADO/admin/users.jsp");
+        }
+    }
+%>
 <!DOCTYPE html>
 <html>
     <head>
