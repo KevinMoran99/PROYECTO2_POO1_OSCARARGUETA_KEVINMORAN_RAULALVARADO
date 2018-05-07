@@ -16,17 +16,71 @@
     <body>
         <div class="container">
             <jsp:useBean id="objeUsua" class="com.sv.udb.models.User" scope="request">
-                <jsp:setProperty name="objeUsua" property="*"/>
+                        <jsp:setProperty name="objeUsua" property="*"/>
             </jsp:useBean>
+            
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item text-white">
+                      <a class="nav-link active text-white" id="pills-login-tab" data-toggle="pill" href="#pills-login" role="tab" aria-controls="pills-home" aria-selected="true">Iniciar sesion</a>
+                    </li>
+                    <li class="nav-item text-white">
+                      <a class="nav-link text-white" id="pills-newcall-tab" data-toggle="pill" href="#pills-newcall" role="tab" aria-controls="pills-profile" aria-selected="false">Nueva denuncia</a>
+                    </li>
+                    <li class="nav-item text-white">
+                      <a class="nav-link text-white" id="pills-viewcall-tab" data-toggle="pill" href="#pills-viewcall" role="tab" aria-controls="pills-contact" aria-selected="false">Ver denuncia</a>
+                    </li>
+                </ul>
             <div class="card card-container">
-                <!-- <img class="profile-img-card" src="//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" alt="" /> -->
-                <img style="width: 100%;" src="resources/lib/img/logoMined.png" />
-                <p id="profile-name" class="profile-name-card"></p>
-                <form class="form-signin">
-                    <input type="email" id="inputEmail" class="form-control" name="email" placeholder="Email" required autofocus>
-                    <input type="password" id="inputPassword" class="form-control" name="pass" placeholder="Contraseña" required>
-                    <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Iniciar sesión</button>
-                </form><!-- /form -->
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade in active" id="pills-login" role="tabpanel" aria-labelledby="pills-login-tab">
+
+                            <!-- <img class="profile-img-card" src="//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" alt="" /> -->
+                            <img style="width: 100%;" src="resources/lib/img/logoMined.png" />
+                            <p id="profile-name" class="profile-name-card"></p>
+                            <form class="form-signin">
+                                <input type="email" id="inputEmail" class="form-control" name="email" placeholder="Email" required autofocus>
+                                <input type="password" id="inputPassword" class="form-control" name="pass" placeholder="Contraseña" required>
+                                <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Iniciar sesión</button>
+                            </form><!-- /form -->
+
+                    </div>
+                    <div class="tab-pane fade" id="pills-newcall" role="tabpanel" aria-labelledby="pills-newcall-tab">
+                        <h3>Nueva denuncia</h3>
+                        <br>
+                        <button class="btn"  data-toggle="modal" data-target="#modalAdd">Enviar denuncia de manera anonima</button>
+                        <!-- Modal -->
+                        <div id="modalAdd" class="modal fade" role="dialog">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Nueva denuncia</h4>
+                              </div>
+                              <div class="modal-body">
+                                <p>contenido</p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-viewcall" role="tabpanel" aria-labelledby="pills-viewcall-tab">
+                        <h3>Ver denuncia</h3>
+                        <br>
+                        <div class="row">
+                            <form method="post">
+                                <div class="col-md-9">
+                                        <input type="text" class="form-control" id="param" name="param" value=""/>
+                                </div>
+                                <div class="col-md-3">
+                                        <input type="submit" id="btnSearch" class="btn" name="formSubmit" value="Buscar"/>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div><!-- /card-container -->
         </div><!-- /container -->
         <script>
