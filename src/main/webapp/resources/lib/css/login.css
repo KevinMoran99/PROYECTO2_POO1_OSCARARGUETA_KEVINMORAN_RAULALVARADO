@@ -142,3 +142,9 @@ body, html {
 .forgot-password:focus{
     color: rgb(12, 97, 33);
 }
+.nav-item{
+    background-color: white;
+}
+.home-header{
+    color: white;
+}
