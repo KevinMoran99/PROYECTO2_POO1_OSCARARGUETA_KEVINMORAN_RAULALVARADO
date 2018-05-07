@@ -27,8 +27,18 @@
                  <li>
                   <a href="${pageContext.request.contextPath}/personal/profile.jsp"><i class="material-icons">person outline</i> Mi perfil </a>
                   </li>
+                  <li>
+                      <form id="logoutF" method="post" action="${pageContext.request.contextPath}/Helper/SessionServlet">
+                          <a id="logout" onclick="this.form.submit();"><i class="material-icons">keyboard_arrow_left</i>Cerrar sesion</a>
+                      </form>
+                  </li>
 
             </ul>
      </div>
 </div>
+                  <script>
+                      document.getElementById("logout").onclick = function() {
+                        document.getElementById("logoutF").submit();
+                      };
+                  </script>
 
