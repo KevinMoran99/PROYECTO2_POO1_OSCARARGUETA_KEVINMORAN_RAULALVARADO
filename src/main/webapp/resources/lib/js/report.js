@@ -40,7 +40,7 @@ function initObjeRepo()
 
 //Método para abrir el reporte de detalla de denuncia sin un formulario que envíe el input (usado al crear una nueva denuncia)
 function showReport(ctxt, id) {
-    var repoURL = ctxt + "/ReportsServlet?name=detailReport&id=" + id;
+    var repoURL = ctxt + "/ReportsServlet?name=Generar reporte&id=" + id;
     var options = {
         pdfOpenParams: {
                 navpanes: 0,
