@@ -106,14 +106,38 @@
                         <input type="button" class="btn" value="Volver" onclick="window.location='${pageContext.request.contextPath}/personal/calls.jsp';"/>
                     </div>
                     <div class="pull-right">
-                        <input type="submit" class="btn" name="report" value="Generar reporte"/>
                         <c:if test='${viable && taken_action.equals("Tomar contacto con ISP y colegio")}'>
                             <input type="submit" class="btn btn-primary" name="formSubmit" value="Guardar cambios"/>
                         </c:if>
                     </div>
                 </form>
+                <div class="pull-right">
+                    <form id="reportForm" data-ctxt="${pageContext.request.contextPath}">
+                        <input type="hidden" id="reportId" value="${id}"/>
+                        <input type="submit" class="btn" name="reportName" value="Generar reporte"/>
+                    </form>
+                </div>
             </div>
         </div>
+                        
+        <!-- Modal -->
+        <div class="modal fade" id="modalReport" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title" id="myModalLabel">Reporte de denuncia</h4>
+                        </div>
+                    <div class="modal-body">
+                        <div id="pdfViewer"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <script>
             $(document).ready(function() {
                 //Si hay mensajes, los muestra

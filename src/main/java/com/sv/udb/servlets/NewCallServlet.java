@@ -124,12 +124,16 @@ public class NewCallServlet extends HttpServlet {
                         
                         //Agregando denuncia
                         if(new CallController().addCall(school, viable, type, user, description)) {
-                            message = "Denuncia guardada";
+                            message = "Denuncia guardada. El reporte se generará en unos momentos.";
+                            
+                            //Llamada recién hecha
+                            Call call = new CallController().getLast();
+
+                            //Devolviendo id de la denuncia a la vista, usado para generar el reporte
+                            request.setAttribute("callId", call.getId());
                             
                             //Si la denuncia es viable, agregar las organizaciones a notificar
                             if(viable) {
-                                //Llamada recién hecha
-                                Call call = new CallController().getLast();
                                 
                                 for (String id : authprov) {
                                     if (type.getTaken_action().equals("Remitir con autoridad competente")) {

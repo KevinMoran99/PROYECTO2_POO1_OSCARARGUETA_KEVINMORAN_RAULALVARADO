@@ -104,6 +104,24 @@
                 </form>
             </div>
         </div>
+                    
+        <!-- Modal -->
+        <div class="modal fade" id="modalReport" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title" id="myModalLabel">Reporte de denuncia</h4>
+                        </div>
+                    <div class="modal-body">
+                        <div id="pdfViewer"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script>
             $(document).ready(function() {
                 $('select').select2();
@@ -114,6 +132,11 @@
                     title = "${status}" == "success" ? "Operación exitosa" : "Operación denegada";
                     
                     swal(title, "${message}", "${status}");
+                }
+                
+                //Si el servlet devolvió un id, se usará para generar un reporte
+                if("${callId}" !== "") {
+                    showReport("${pageContext.request.contextPath}", ${callId});
                 }
             });
             

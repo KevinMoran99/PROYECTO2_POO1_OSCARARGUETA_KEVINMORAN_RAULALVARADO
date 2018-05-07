@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="354"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dataset1"/>
+	<subDataset name="dataset2"/>
+	<subDataset name="provDataSet">
+		<queryString language="SQL">
+			<![CDATA[SELECT p.name, pa.content_removed FROM provider_asigns pa INNER JOIN providers p ON pa.provider_id = p.id]]>
+		</queryString>
+		<field name="name" class="java.lang.String"/>
+		<field name="content_removed" class="java.lang.Boolean"/>
+	</subDataset>
+	<subDataset name="dataset3"/>
+	<subDataset name="Table Dataset 1"/>
+	<parameter name="id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="viable" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="school" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="address" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="type" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="description" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="user" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="talk" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="conn" class="java.sql.Connection">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="list" class="java.util.List">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select 1]]>
+	</queryString>
+	<field name="1" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="66" splitType="Stretch">
+			<rectangle>
+				<reportElement x="-24" y="-30" width="604" height="96" forecolor="#FFFFFF" backcolor="#0077C6"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="362" height="48" forecolor="#FFFFFF"/>
+				<textElement>
+					<font size="36" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reporte de denuncia]]></text>
+			</staticText>
+			<image>
+				<reportElement x="405" y="-19" width="172" height="85"/>
+				<imageExpression><![CDATA["../resources/lib/img/logoMined.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<detail>
+		<band height="580" splitType="Stretch">
+			<textField>
+				<reportElement x="174" y="16" width="93" height="46"/>
+				<textElement>
+					<font fontName="Tahoma" size="30"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="16" width="163" height="46"/>
+				<textElement>
+					<font fontName="Tahoma" size="30"/>
+				</textElement>
+				<text><![CDATA[Denuncia #]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="362" y="16" width="193" height="46" forecolor="#FF0000">
+					<printWhenExpression><![CDATA[new Boolean($P{viable} == Boolean.FALSE)]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Tahoma" size="30" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ARCHIVADA]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="62" width="555" height="2"/>
+			</line>
+			<rectangle>
+				<reportElement positionType="Float" x="0" y="81" width="555" height="25" forecolor="#FFFFFF" backcolor="#87CAB6"/>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="Float" x="11" y="81" width="351" height="25" forecolor="#FFFFFF"/>
+				<textElement>
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<text><![CDATA[Escuela desde la que se reportó]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="11" y="106" width="532" height="28"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{school}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="11" y="160" width="532" height="28"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{address}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement positionType="Float" x="0" y="134" width="555" height="25" forecolor="#FFFFFF" backcolor="#87CAB6"/>
+			</rectangle>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="11" y="214" width="532" height="28"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="11" y="189" width="267" height="25" forecolor="#FFFFFF"/>
+				<textElement>
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<text><![CDATA[Escuela desde la que se reportó]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement positionType="Float" x="0" y="189" width="555" height="25" forecolor="#FFFFFF" backcolor="#87CAB6"/>
+			</rectangle>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="11" y="268" width="532" height="28"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{type}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="11" y="243" width="267" height="25" forecolor="#FFFFFF"/>
+				<textElement>
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<text><![CDATA[Escuela desde la que se reportó]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement positionType="Float" x="0" y="243" width="555" height="25" forecolor="#FFFFFF" backcolor="#87CAB6"/>
+			</rectangle>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="11" y="323" width="532" height="28"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{description}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="11" y="298" width="267" height="25" forecolor="#FFFFFF"/>
+				<textElement>
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<text><![CDATA[Escuela desde la que se reportó]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement positionType="Float" x="0" y="298" width="555" height="25" forecolor="#FFFFFF" backcolor="#87CAB6"/>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="Float" x="11" y="135" width="267" height="25" forecolor="#FFFFFF"/>
+				<textElement>
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<text><![CDATA[Dirección]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="11" y="188" width="267" height="25" forecolor="#FFFFFF"/>
+				<textElement>
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<text><![CDATA[Fecha de llamada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="11" y="243" width="267" height="25" forecolor="#FFFFFF"/>
+				<textElement>
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<text><![CDATA[Tipo de denuncia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="11" y="298" width="267" height="25" forecolor="#FFFFFF"/>
+				<textElement>
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement positionType="Float" x="0" y="364" width="555" height="39" forecolor="#FFFFFF" backcolor="#797965"/>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="Float" x="11" y="364" width="267" height="39" forecolor="#FFFFFF"/>
+				<textElement>
+					<font fontName="Tahoma" size="28"/>
+				</textElement>
+				<text><![CDATA[Notas adicionales]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="28" y="416" width="213" height="31" forecolor="#000000" backcolor="#000000"/>
+				<textElement>
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<text><![CDATA[Denuncia atendida por:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="241" y="416" width="302" height="31"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{user}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="28" y="447" width="527" height="55" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#000000">
+					<printWhenExpression><![CDATA[new Boolean($P{viable} == Boolean.FALSE)]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<text><![CDATA[El receptor de la llamada clasificó la denuncia como NO VIABLE,    por lo que fue ARCHIVADA.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="11" y="416" width="17" height="31" forecolor="#000000" backcolor="#000000"/>
+				<textElement>
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<text><![CDATA[>]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="11" y="447" width="17" height="25" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#000000">
+					<printWhenExpression><![CDATA[new Boolean($P{viable} == Boolean.FALSE)]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<text><![CDATA[>]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="28" y="502" width="515" height="55" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#000000">
+					<printWhenExpression><![CDATA[$P{talk}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<text><![CDATA[El centro escolar ya impartió charlas para prevenir fenómenos similares en el futuro.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="11" y="502" width="17" height="25" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#000000">
+					<printWhenExpression><![CDATA[$P{talk}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Tahoma" size="18"/>
+				</textElement>
+				<text><![CDATA[>]]></text>
+			</staticText>
+			<break>
+				<reportElement x="0" y="569" width="100" height="1">
+					<printWhenExpression><![CDATA[$P{viable}]]></printWhenExpression>
+				</reportElement>
+			</break>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="6" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="45" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="23" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="id">
+					<subreportParameterExpression><![CDATA[$P{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/SubreportProvider.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="0" y="23" width="555" height="22"/>
+				<subreportParameter name="id">
+					<subreportParameterExpression><![CDATA[$P{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/SubreportAuthority.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>
