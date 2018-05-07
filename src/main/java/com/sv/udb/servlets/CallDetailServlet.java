@@ -6,9 +6,9 @@
 package com.sv.udb.servlets;
 
 import com.sv.udb.controllers.CallController;
+import com.sv.udb.controllers.ProvAsignController;
 import com.sv.udb.models.Call;
-import com.sv.udb.models.User;
-import com.sv.udb.utilities.Utils;
+import com.sv.udb.models.Provider_asign;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -21,8 +21,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author kevin
  */
-@WebServlet(name = "CallsServlet", urlPatterns = {"/CallsServlet"})
-public class CallsServlet extends HttpServlet {
+@WebServlet(name = "CallDetailServlet", urlPatterns = {"/CallDetailServlet"})
+public class CallDetailServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,16 +37,52 @@ public class CallsServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
+            
             boolean isPost = request.getMethod().equals("POST");
             
             if(isPost) {
+                //Acción solicitada
+                String action = request.getParameter("formSubmit");
                 
-                //Si trae un id de denuncia, es porque se quiere ver el detalle de dicha denuncia
-                if(request.getParameter("callId") != null){
-                    int id = Integer.parseInt(request.getParameter("callId"));
-                    //Obteniendo denuncia
-                    Call call = new CallController().getOne(id);
-                    //Enviando atributos de la denuncia a la vista
+                if (action.equals("Guardar cambios")) {
+                    
+                    //Variables de output. Su valor por defecto indica que no se han especificado cambios.
+                    //Si el usuario no hizo cambios al hacer el submit, los valores por defecto prevaleceran
+                    String message = "No se han especificado cambios sobre la denuncia", status = "warning";
+                    
+                    //Denuncia actual, guardada en sesión
+                    Call call = (Call)request.getSession().getAttribute("call");
+                    
+                    //Si se ha especificado que la charla ha sido dada, se hace la actualización
+                    Boolean talk_given = request.getParameter("talk_given") != null;
+                    if (talk_given) {
+                        if(new CallController().updateCall(call.getId(), true)) {
+                            message = "Los cambios fueron guardados";
+                            status = "success";
+                        }
+                        else {
+                            message = "No se pudo actualizar el estado de charla de la denuncia";
+                            status = "error";
+                        }
+                    }
+                    
+                    //Por cada proveedor al que se le haya especificado que ha removido el contenido, se hace la actualización
+                    for (Provider_asign asign : new ProvAsignController().getAsigns(call)) {
+                        Boolean content_removed = request.getParameter("content_removed" + asign.getId()) != null;
+                        if (content_removed) {
+                            if(new ProvAsignController().updateProvAsign(asign.getId(), true)) {
+                                message = "Los cambios fueron guardados";
+                                status = "success";
+                            }
+                            else {
+                                message = "No se pudo actualizar el estado de contenido de proveedores";
+                                status = "error";
+                            }
+                        }
+                    }
+                    
+                    //Reestableciendo parámetros con los que se inicializó la vista
+                    call = new CallController().getOne(call.getId()); //Se vuelve a hacer la consulta para que se actualize el campo talk_given
                     request.setAttribute("id", call.getId());
                     request.setAttribute("school", call.getSchool());
                     request.setAttribute("viable", call.getViable());
@@ -56,54 +92,24 @@ public class CallsServlet extends HttpServlet {
                     request.setAttribute("call_date",call.getCall_date());
                     request.setAttribute("taken_action",call.getComplaint_type().getTaken_action());
                     request.setAttribute("talk_given",call.isTalk_given());
-                    
-                    //Guardando denuncia en sesión, servirá para modificarla si lo requiere en la vista de calldetail
                     request.getSession().setAttribute("call", call);
+                    
+                    //Añadiendo parámetros de output
+                    request.setAttribute("message", message);
+                    request.setAttribute("status", status);
                     
                     //Redireccionando
                     request.getRequestDispatcher("/personal/calldetail.jsp").forward(request, response);
                 }
                 
                 else {
-                    //Acción solicitada
-                    String action = request.getParameter("formSubmit");
-
-                    if (action.equals("Buscar")) {
-                        //Obteniendo parámetros
-                        int filterType = Integer.parseInt(request.getParameter("filterType"));
-                        String param = String.valueOf(request.getParameter("filterArg"));
-                        String from = String.valueOf(request.getParameter("filterFrom"));
-                        String to = String.valueOf(request.getParameter("filterTo"));
-
-                        //Si se eligió "registradas por mí", se tomará el id del usuario logeado
-                        if (filterType == CallController.BY_USER){
-                            param = String.valueOf(((User)(request.getSession().getAttribute("session"))).getId());
-                        }
-
-                        //Permite imprimir en el cliente
-                        PrintWriter out = response.getWriter();
-
-                        for (Call call : new CallController().search(filterType, param, from, to)) {
-                            out.println("<tr class=\"odd\">");
-                            out.println("<td><input type=\"radio\" name=\"callId\" value=\"" + call.getId() + "\" onchange=\"this.form.submit();\"/></td>");
-                            out.println("<td>" + call.getSchool() + "</td>");
-                            out.println("<td>" + call.getComplaint_type() + "</td>");
-                            out.println("<td>" + call.getDescription() + "</td>");
-                            out.println("<td>" + (call.getViable() ? "Es viable" : "No es viable") + "</td>");
-                            out.println("<td>" + Utils.formatDate(call.getCall_date(), Utils.DATE_UI) + "</td>");
-                            out.println("</tr>");
-                        }
-
-                    }
+                    request.getRequestDispatcher("/personal/calldetail.jsp").forward(request, response);
                 }
             }
-            else {
-                request.getRequestDispatcher("/personal/calls.jsp").forward(request, response);
-            }
         }
-        catch (Exception e) {
+        catch(Exception e) {
             PrintWriter out = response.getWriter();
-            out.println("Error: " + e.toString());
+            out.println("Error: " + e.getMessage());
         }
     }
 

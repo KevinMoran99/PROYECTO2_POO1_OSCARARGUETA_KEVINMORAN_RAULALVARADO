@@ -4,6 +4,8 @@
     Author     : kevin
 --%>
 
+<%@page import="com.sv.udb.controllers.CallController"%>
+<%@page import="com.sv.udb.controllers.ProvAsignController"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
@@ -22,7 +24,7 @@
                 <div class="col-md-8 content">
                     <h1>Detalle de denuncia</h1>
                 </div>
-                <c:if test="true">
+                <c:if test="${!viable}">
                     <div class="col-md-4 content">
                         <h2 class="pull-right text-danger">ARCHIVADA</h2>
                     </div>
@@ -33,56 +35,85 @@
                 <div class="row">
                     <div class="col-md-3">
                         <label for="user">Registrada por usuario:</label>
-                        <p id="user">Mariano</p>
+                        <p id="user">${user}</p>
                     </div>
                     <div class="col-md-3">
                         <label for="date">Fecha de registro:</label>
-                        <p id="date">Mariano</p>
+                        <p id="date"><fmt:formatDate pattern = "dd/MM/yyyy" value = "${call_date}" /></p>
                     </div>
                     <div class="col-md-3">
                         <label for="school">Escuela desde la que se reporta:</label>
-                        <p id="school">Instituto Superpoderoso de los Majes Bien Maletas</p>
+                        <p id="school">${school}</p>
                     </div>
                     <div class="col-md-3">
                         <label for="complaint_type">Tipo de denuncia:</label>
-                        <p id="complaint_type">Mariano</p>
+                        <p id="complaint_type">${complaint_type}</p>
                     </div>
                 </div>
                 <label for="description">Descripción:</label>
-                <p id="description">Mariano</p>
+                <p id="description">${description}</p>
                 <br>
-                <form method="POST" action="PrestamoServlet" name="filter">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-check text-center">
-                                <input class="form-check-input big-checkbox" type="checkbox" value="" id="viable" checked>
-                                <label class="form-check-label" for="viable">
-                                    La denuncia es viable
-                                </label>
+                <form method="POST" action="${pageContext.request.contextPath}/CallDetailServlet" name="filter">
+                    <c:if test='${viable && taken_action.equals("Tomar contacto con ISP y colegio")}'>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <display:table id="tblProv" name='<%= new ProvAsignController().getAsigns(new CallController().getOne((Integer)request.getAttribute("id")))%>'>
+                                    <display:column property="provider" title="Proveedor" sortable="true" />
+                                    <display:column title="Contenido removido">
+                                        <c:choose>
+                                            <c:when test="${tblProv.content_removed}">
+                                                <img style="width: 25px; height: 25px;" src="${pageContext.request.contextPath}/resources/lib/img/check.jpg">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <input type="checkbox" name="content_removed${tblProv.id}" value="1"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </display:column>
+                                </display:table>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-check text-center">
-                                <input class="form-check-input big-checkbox" type="checkbox" value="" id="talk_given">
-                                <label class="form-check-label"  for="talk_given">
-                                    Se impartieron charlas en el centro escolar para prevenir fenómenos similares
-                                </label>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-check text-center">
+                                    <c:choose>
+                                        <c:when test="${talk_given}">
+                                            <p style="font-size: 25px;">Las charlas para prevenir fenómenos similares en el centro escolar ya han sido impartidas.</p>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <input class="form-check-input big-checkbox" type="checkbox" value="1" name="talk_given" id="talk_given">
+                                            <label class="form-check-label"  for="talk_given">
+                                                Se impartieron charlas en el centro escolar para prevenir fenómenos similares
+                                            </label>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <h4>INSERTAR AQUÍ COSO DE PROVEEDORES</h4>
+                    </c:if>
+                    <br>
                     <div class="pull-left">
-                        <input type="button" class="btn" value="Volver"/>
+                        <input type="button" class="btn" value="Volver" onclick="window.location='${pageContext.request.contextPath}/personal/calls.jsp';"/>
                     </div>
                     <div class="pull-right">
                         <input type="submit" class="btn" name="report" value="Generar reporte"/>
-                        <input type="submit" class="btn btn-primary" name="formSubmit" value="Guardar cambios"/>
+                        <c:if test='${viable && taken_action.equals("Tomar contacto con ISP y colegio")}'>
+                            <input type="submit" class="btn btn-primary" name="formSubmit" value="Guardar cambios"/>
+                        </c:if>
                     </div>
                 </form>
             </div>
         </div>
+        <script>
+            $(document).ready(function() {
+                //Si hay mensajes, los muestra
+                if("${message}" !== "") {
+                    var title = "";
+                    title = "${status}" == "success" ? "Operación exitosa" : "${status}" == "warning" ? "No hay cambios" : "Operación denegada";
+                    
+                    swal(title, "${message}", "${status}");
+                }
+            });
+        </script>
     </body>
 </html>
 

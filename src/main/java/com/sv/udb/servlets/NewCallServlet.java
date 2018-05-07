@@ -99,7 +99,7 @@ public class NewCallServlet extends HttpServlet {
                     School school = new SchoolController().getOne(Integer.parseInt(request.getParameter("school")));
                     Boolean viable = request.getParameter("viable") != null;
                     Complaint_type type = new ComplaintTypeController().getOne(Integer.parseInt(request.getParameter("complaint_type")));
-                    /*AAAAA*/User user = new UserController().getOne(2);
+                    User user = (User)(request.getSession().getAttribute("session"));
                     String description = String.valueOf(request.getParameter("description"));
                     String authprov[] = new String[0];
                     if (viable && type.getTaken_action().equals("Remitir con autoridad competente")){
