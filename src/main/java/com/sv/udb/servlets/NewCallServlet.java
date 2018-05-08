@@ -91,6 +91,7 @@ public class NewCallServlet extends HttpServlet {
                     }
                 }
                 
+                //Nueva denuncia registrada por personal
                 else if (action.equals("Guardar")){
                     boolean flag = true;
                     String message = "", status = "success";
@@ -162,12 +163,123 @@ public class NewCallServlet extends HttpServlet {
                     request.getRequestDispatcher("/personal/newcall.jsp").forward(request, response);
                 }
                 
-                else {
+                //Nueva denuncia registrada por anónimo
+                else if (action.equals("Guardar denuncia anonima")){
+                    boolean flag = true;
+                    String message = "", status = "success";
+                    
+                    //Obteniendo parámetros
+                    School school = new SchoolController().getOne(Integer.parseInt(request.getParameter("school")));
+                    Boolean viable = false;
+                    Complaint_type type = new ComplaintTypeController().getOne(Integer.parseInt(request.getParameter("complaint_type")));
+                    User user = new UserController().getOne(1); //La relaciona a root provisionalmente
+                    String description = String.valueOf(request.getParameter("description"));
+                    
+                    //Validaciones
+                    if (description.isEmpty()) {
+                        request.setAttribute("descriptionE","Descripción: no se permiten campos vacíos");
+                        flag = false;
+                    }
+                    
+                    if(flag){
+                        boolean temp;
+                        
+                        //Agregando denuncia
+                        if(new CallController().addCall(school, viable, type, user, description)) {
+                            
+                            //Llamada recién hecha
+                            Call call = new CallController().getLast();
+                            
+                            message = "Denuncia guardada. Cuando sea procesada, podrá obtener información de la misma "
+                                    + "introduciendo el código de denuncia en el apartado Ver Denuncia. Su código es: " + call.getCode();
+                            
+                            //Guardando código en sesión por si el usuario es majirulo
+                            request.getSession().setAttribute("callCode", call.getCode());
+                            
+                        }
+                        else {
+                            message = "La denuncia no pudo ser guardada";
+                            status = "error";
+                        }
+                    }
+                    
+                    request.setAttribute("message", message);
+                    request.setAttribute("status", status);
+                    request.getRequestDispatcher("/").forward(request, response);
+                }
+                
+                //Procesar denuncia registrada por persona anónima
+                else if (action.equals("Procesar")){
+                    boolean flag = true;
+                    String message = "", status = "success";
+                    
+                    //Denuncia actual, guardada en sesión
+                    Call call = (Call)request.getSession().getAttribute("call");
+                    
+                    //Obteniendo parámetros
+                    Boolean viable = request.getParameter("viable") != null;
+                    User user = (User)(request.getSession().getAttribute("session"));
+                    String authprov[] = new String[0];
+                    if (viable && call.getComplaint_type().getTaken_action().equals("Remitir con autoridad competente")){
+                        authprov = request.getParameterValues("authority[]");
+                    }
+                    else if (viable && call.getComplaint_type().getTaken_action().equals("Tomar contacto con ISP y colegio")) {
+                        authprov = request.getParameterValues("provider[]");
+                    }
+                    
+                    //Validaciones
+                    if (viable && authprov.length == 0) {
+                        request.setAttribute("authprovE","Debe elegir al menos un elemento de la lista");
+                        flag = false;
+                    }
+                    
+                    if(flag){
+                        boolean temp;
+                        
+                        //Agregando denuncia
+                        if(new CallController().updateProcessedCall(call.getId(), viable, user)) {
+                            message = "Denuncia procesada. El reporte se generará en unos momentos.";
+                            
+
+                            //Devolviendo id de la denuncia a la vista, usado para generar el reporte
+                            request.setAttribute("callId", call.getId());
+                            
+                            //Si la denuncia es viable, agregar las organizaciones a notificar
+                            if(viable) {
+                                
+                                for (String id : authprov) {
+                                    if (call.getComplaint_type().getTaken_action().equals("Remitir con autoridad competente")) {
+                                        if (!(new AuthAsignController().addAuthAsign(call, new AuthorityController().getOne(Integer.parseInt(id))))) {
+                                            message = "Error al guardar autoridad relacionada a denuncia";
+                                            status = "error";
+                                        }
+                                    }
+                                    else {
+                                        if (!(new ProvAsignController().addProvAsign(call, new ProviderController().getOne(Integer.parseInt(id))))) {
+                                            message = "Error al guardar proveedor relacionado a denuncia";
+                                            status = "error";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            message = "La denuncia no pudo ser procesada";
+                            status = "error";
+                        }
+                    }
+                    
+                    request.setAttribute("message", message);
+                    request.setAttribute("status", status);
                     request.getRequestDispatcher("/personal/newcall.jsp").forward(request, response);
+                }
+                
+                else {
+                    request.getRequestDispatcher("/").forward(request, response);
                 }
             }
             else {
-                request.getRequestDispatcher("/personal/newcall.jsp").forward(request, response);
+                request.getRequestDispatcher("/").forward(request, response);
             }
         }
         catch(Exception e) {

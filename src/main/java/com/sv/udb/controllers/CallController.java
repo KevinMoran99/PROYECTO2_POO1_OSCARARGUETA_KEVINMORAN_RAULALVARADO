@@ -109,6 +109,40 @@ public class CallController {
         return resp;
     }
     
+    public Call getOneByCode (String code) {
+        Call resp = null;
+        try {
+            PreparedStatement cmd = this.conn.prepareStatement("SELECT * FROM calls WHERE code = ?");
+            cmd.setString(1, code);
+            ResultSet rs = cmd.executeQuery();
+            while (rs.next()) {
+                resp = new Call(
+                        rs.getInt(1), 
+                        new SchoolController().getOne(rs.getInt(2)),
+                        rs.getBoolean(3),
+                        new ComplaintTypeController().getOne(rs.getInt(4)),
+                        new UserController().getOne(rs.getInt(5)),
+                        rs.getString(6),
+                        rs.getDate(7),
+                        rs.getBoolean(8),
+                        rs.getString(9));
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error al consultar denuncia: " + ex.getMessage());
+        } finally {
+            try {
+                if (this.conn != null) {
+                    if (!this.conn.isClosed()) {
+                        this.conn.close();
+                    }
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error al cerrar la conexión al consultar denuncia: " + ex.getMessage());
+            }
+        }
+        return resp;
+    }
+    
     //Genera el código de denuncia necesario para crear una nueva denuncia
     private String generateCode() {
         return Utils.randomString(8) + String.valueOf(this.getLast().getId() + 1);
@@ -164,6 +198,33 @@ public class CallController {
             PreparedStatement cmd = this.conn.prepareStatement("UPDATE calls SET talk_given = ? WHERE id = ?");
             cmd.setBoolean(1, talk_given);
             cmd.setInt(2, id);
+            cmd.executeUpdate();
+            resp = true;
+        } catch (Exception ex) {
+            System.err.println("Error al modificar denuncia" + ex.getMessage());
+        } finally {
+            try {
+                if (this.conn != null) {
+                    if (!this.conn.isClosed()) {
+                        this.conn.close();
+                    }
+                }
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar la conexion al modificar denuncia: " + e.getMessage());
+            }
+        }
+        
+        return resp;
+    }
+    
+    public boolean updateProcessedCall (int id, boolean viable, User user) {
+        boolean resp = false;
+        
+        try {
+            PreparedStatement cmd = this.conn.prepareStatement("UPDATE calls SET viable = ?, user_id = ? WHERE id = ?");
+            cmd.setBoolean(1, viable);
+            cmd.setInt(2, user.getId());
+            cmd.setInt(3, id);
             cmd.executeUpdate();
             resp = true;
         } catch (Exception ex) {

@@ -2,7 +2,7 @@
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel='stylesheet' type="text/css" href='${pageContext.request.contextPath}/webjars/select2/4.0.3/css/select2.min.css'>
-<link rel='stylesheet' type="text/css" href="${pageContext.request.contextPath}/webjars/sweetalert/1.0.0/sweetalert.css"></script>
+<link rel='stylesheet' type="text/css" href="${pageContext.request.contextPath}/webjars/sweetalert/1.0.0/sweetalert.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/webjars/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/webjars/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/webjars/select2/4.0.3/js/select2.min.js"></script>

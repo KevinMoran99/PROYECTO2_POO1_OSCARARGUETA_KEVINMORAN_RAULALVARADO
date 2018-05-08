@@ -50,7 +50,7 @@ public class ReportGenerator {
     }
     
     
-    public static byte[] detailReport(ServletContext ctx, int id) throws SQLException {
+    public static byte[] detailReport(ServletContext ctx, String idOrCode) throws SQLException {
         HashMap map;
         byte[] bytes = null;
         
@@ -62,11 +62,17 @@ public class ReportGenerator {
             String jasperFileName = ctx.getRealPath("/reports/Detail.jasper");
             
             //Instanciando llamada
-            Call call = new CallController().getOne(id);
+            Call call = null;
+            try { //Si el parámetro es un entero, busca por el id
+                call = new CallController().getOne(Integer.parseInt(idOrCode));
+            }
+            catch (Exception e) { //Si no es un entero, busca por el código
+                call = new CallController().getOneByCode(idOrCode);
+            }
             
             //seteando los parametros que recibe el reporte
             map = new HashMap();
-            map.put("id",String.valueOf(id));
+            map.put("id",String.valueOf(call.getId()));
             map.put("viable", call.getViable());
             map.put("school", call.getSchool().toString());
             map.put("address", call.getSchool().getAddress());

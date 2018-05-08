@@ -7,6 +7,17 @@ and open the template in the editor.
     Created on : 05-05-2018, 12:56:24 AM
     Author     : kevin
 */
+.select2 {
+    width: 100% !important;
+}
+
+.pdfobject-container {
+        width: 100%;
+        height: 600px;
+        margin: 2em 0;
+}
+.pdfobject { border: solid 1px #666; }
+
 body, html {
     height: 100%;
     background-repeat: no-repeat;

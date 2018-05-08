@@ -5,12 +5,13 @@
  */
 package com.sv.udb.servlets;
 
-import com.sv.udb.utilities.ReportGenerator;
+import com.sv.udb.controllers.CallController;
+import com.sv.udb.models.Call;
+import com.sv.udb.models.User;
+import com.sv.udb.utilities.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,8 +21,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author kevin
  */
-@WebServlet(name = "ReportsServlet", urlPatterns = {"/ReportsServlet"})
-public class ReportsServlet extends HttpServlet {
+@WebServlet(name = "CodeVerifyServlet", urlPatterns = {"/CodeVerifyServlet"})
+public class CodeVerifyServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,47 +37,39 @@ public class ReportsServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
-            String reportName = request.getParameter("name");
-            String idOrCode;
-            String from, to;
-            byte[] bytes = null;
-            if (reportName.equals(ReportGenerator.DETAIL)) {
-                idOrCode = request.getParameter("id");
-                bytes = ReportGenerator.detailReport(getServletContext(), idOrCode);
-            }
-            else if (reportName.equals(ReportGenerator.TYPE) || reportName.equals(ReportGenerator.VIABILITY) || reportName.equals(ReportGenerator.TOP)) {
-                from = request.getParameter("from");
-                to = request.getParameter("to");
-                bytes = ReportGenerator.typeReport(getServletContext(), reportName, from, to);
+            boolean isPost = request.getMethod().equals("POST");
+            
+            if(isPost) {
+                
+                String code = request.getParameter("param");
+
+                //Permite imprimir en el cliente
+                PrintWriter out = response.getWriter();
+
+                //Buscando denuncia con codigo proporcionado
+                Call call = new CallController().getOneByCode(code);
+                
+                //Si la denuncia no existe
+                if (call == null) {
+                    out.println("No existe ninguna denuncia vinculada al código ingresado");
+                }
+                //Si la denuncia esta vinculada a root, osea, no ha sido procesada
+                else if (call.getUser().getId() == 1) {
+                    out.println("Su denuncia aún no ha sido procesada");
+                }
+                //Si la denuncia ya fue procesada
+                else {
+                    out.println("Denuncia válida");
+                }
+
             }
             else {
-                //Si el nombre no coincide con ninguno de los posibles, redirige a index
-                request.getRequestDispatcher("/index.jsp").forward(request, response);
+                request.getRequestDispatcher("/").forward(request, response);
             }
-            
-            ServletOutputStream out = response.getOutputStream();
-            if (bytes != null) {
-                response.setContentType("application/pdf");
-                response.setHeader("Content-Disposition", "inline; filename=reporte.pdf");
-                response.setContentLength(bytes.length);
-                out.write(bytes, 0, bytes.length);
-                out.flush();
-                out.close();
-            }
-            else {
-                StringWriter stringWriter = new StringWriter();
-                PrintWriter printWriter = new PrintWriter(stringWriter);
-                response.setContentType("text/plain");
-                response.getOutputStream().print(stringWriter.toString());
-            }
-
-            
-
         }
-        catch(Exception e) {
+        catch (Exception e) {
             PrintWriter out = response.getWriter();
-            System.out.println(e.toString());   
-            out.println("Error: " + e.getMessage());
+            out.println("Error: " + e.toString());
         }
     }
 

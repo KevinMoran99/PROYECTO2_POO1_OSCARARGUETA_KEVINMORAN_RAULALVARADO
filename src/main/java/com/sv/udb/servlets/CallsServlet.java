@@ -62,7 +62,15 @@ public class CallsServlet extends HttpServlet {
                     request.getSession().setAttribute("call", call);
                     
                     //Redireccionando
-                    request.getRequestDispatcher("/personal/calldetail.jsp").forward(request, response);
+                    if (call.getUser().getId() == 1) {
+                        //Si la denuncia no ha sido procesada
+                        request.getRequestDispatcher("/personal/callprocess.jsp").forward(request, response);
+                    }
+                    else {
+                        //Si la denuncia ya fue procesada
+                        request.getRequestDispatcher("/personal/calldetail.jsp").forward(request, response);
+                    }
+                    
                 }
                 
                 else {

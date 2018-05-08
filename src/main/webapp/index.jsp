@@ -1,6 +1,9 @@
+<%@page import="com.sv.udb.controllers.ComplaintTypeController"%>
+<%@page import="com.sv.udb.controllers.SchoolController"%>
 <%@page import="com.sv.udb.controllers.UserController"%>
 <%@page import="com.sv.udb.models.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -8,10 +11,17 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <link rel='stylesheet' href='webjars/bootstrap/3.2.0/css/bootstrap.min.css'>
+        <link rel='stylesheet' type="text/css" href='${pageContext.request.contextPath}/webjars/bootstrap/3.2.0/css/bootstrap.min.css'>
         <link rel='stylesheet' href='resources/lib/css/login.css'>
-        <script type="text/javascript" src="webjars/jquery/2.1.1/jquery.min.js"></script>
-        <script type="text/javascript" src="webjars/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <link rel='stylesheet' type="text/css" href='${pageContext.request.contextPath}/webjars/select2/4.0.3/css/select2.min.css'>
+        <link rel='stylesheet' type="text/css" href="${pageContext.request.contextPath}/webjars/sweetalert/1.0.0/sweetalert.css">
+        <script type="text/javascript" src="${pageContext.request.contextPath}/webjars/jquery/2.1.1/jquery.min.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/webjars/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/webjars/select2/4.0.3/js/select2.min.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/webjars/sweetalert/1.0.0/sweetalert.min.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/lib/pdfjs/build/pdf.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/lib/js/pdfobject.min.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/lib/js/report.js"></script>
     </head>
     <body>
         <div class="container">
@@ -48,6 +58,12 @@
                         <h3>Nueva denuncia</h3>
                         <br>
                         <button class="btn"  data-toggle="modal" data-target="#modalAdd">Enviar denuncia de manera anonima</button>
+                        <c:if test='${sessionScope.callCode != null}'>
+                            <br><br>
+                            <div class="text-center">
+                                <a href="#" onclick="showCode()">Ver código de última denuncia hecha</a>
+                            </div>
+                        </c:if>
                         <!-- Modal -->
                         <div id="modalAdd" class="modal fade" role="dialog">
                           <div class="modal-dialog">
@@ -56,12 +72,56 @@
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 <h4 class="modal-title">Nueva denuncia</h4>
                               </div>
-                              <div class="modal-body">
-                                <p>contenido</p>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                              </div>
+                              <form id="newCallForm" method="POST" action="${pageContext.request.contextPath}/NewCallServlet" name="add">
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="school">Escuela desde la que se reporta:</label><br>
+                                            <select class="form-control" name="school" id="school">
+                                                <c:forEach var="schoolItem" items="<%=new SchoolController().getAll(true)%>">
+                                                    <option value="${schoolItem.getId()}">${schoolItem}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <c:choose>
+                                                    <c:when test="${descriptionE == null}">
+                                                        <label for="description">Descripción</label>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <label for="description" class="text-danger">${descriptionE}</label>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                                <textarea style="resize: none;" rows="4" cols="50" class="form-control" name="description" id="description" value="" ></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="complaint_type">Tipo de denuncia:</label>
+                                            <select class="form-control" name="complaint_type" id="complaint_type">
+                                                <c:forEach var="complaintItem" items="<%=new ComplaintTypeController().getAll(true)%>">
+                                                    <option value="${complaintItem.getId()}">${complaintItem}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div class="pull-right">
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearForm();">Cerrar</button>
+                                    <input type="submit" class="btn btn-primary" name="formSubmit" value="Guardar denuncia anonima"/>
+                                </div>
+                              </form>
                             </div>
                           </div>
                         </div>
@@ -70,14 +130,31 @@
                         <h3>Ver denuncia</h3>
                         <br>
                         <div class="row">
-                            <form method="post">
+                            <form id='reportCode' method="post">
                                 <div class="col-md-9">
-                                        <input type="text" class="form-control" id="param" name="param" value=""/>
+                                        <input type="text" class="form-control" id="param" name="param" value="" required/>
                                 </div>
                                 <div class="col-md-3">
                                         <input type="submit" id="btnSearch" class="btn" name="formSubmit" value="Buscar"/>
                                 </div>
                             </form>
+                        </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="modalReport" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                        <h4 class="modal-title" id="myModalLabel">Reporte de denuncia</h4>
+                                        </div>
+                                    <div class="modal-body">
+                                        <div id="pdfViewer"></div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -92,6 +169,53 @@
                     
                     swal(title, "${message}", "${status}");
                 }
+                
+                $('select').select2();
+                
+                  
+            });
+            
+            function clearForm() {
+                $("#school").val($("#school option:first").val());
+                $("#description").val("");
+                $("#complaint_type").val($("#complaint_type option:first").val());
+                $('select').select2();
+            }
+            
+            function showCode() {
+                if (${sessionScope.callCode != null}) {
+                    swal("${sessionScope.callCode}", "Por favor, mantenga guardado este código en otro lugar, pues, si cierra su navegador o hace otra denuncia, ya no podrá acceder a él.");
+                }
+                else {
+                    swal("No se han hecho denuncias");
+                }
+            }
+            
+            var ctxt = "${pageContext.request.contextPath}";
+            
+            //Al solicitar un reporte por codigo
+            $("#reportCode").submit(function(e) {
+                e.preventDefault();
+                
+                
+                //Verificando que la denuncia sea valida
+                $.ajax({
+                    method: 'POST',
+                    data: $("#reportCode").serialize(),
+                    url: "${pageContext.request.contextPath}/CodeVerifyServlet",
+                    success: function(result) {
+                        console.log(result);
+                        if ($.trim(result) != "Denuncia válida") {
+                            swal("Operación denegada", result, "warning");
+                        }
+                        else {
+                            //Si la denuncia es válida, carga su reporte
+                            showReport(ctxt, $("#param").val());
+                        }
+                    }
+                });
+                
+                
             });
         </script>
         <%
