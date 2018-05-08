@@ -122,7 +122,7 @@ public class AuthorityController {
             cmd.setInt(1, id);
             ResultSet rs = cmd.executeQuery();
             while (rs.next()) {
-                resp = new Authority(rs.getInt(1), rs.getString(2), Boolean.parseBoolean(rs.getString(3)));
+                resp = new Authority(rs.getInt(1), rs.getString(2), rs.getBoolean(3));
             }
         } catch (SQLException ex) {
             System.err.println("Error al consultar: " + ex.getMessage());
