@@ -19,8 +19,11 @@ import com.sv.udb.models.Complaint_type;
 import com.sv.udb.models.Provider;
 import com.sv.udb.models.School;
 import com.sv.udb.models.User;
+import com.sv.udb.utilities.Mailer;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -115,7 +118,7 @@ public class NewCallServlet extends HttpServlet {
                         request.setAttribute("descriptionE","Descripción: no se permiten campos vacíos");
                         flag = false;
                     }
-                    if (viable && authprov.length == 0) {
+                    if (viable && authprov == null) {
                         request.setAttribute("authprovE","Debe elegir al menos un elemento de la lista");
                         flag = false;
                     }
@@ -188,7 +191,24 @@ public class NewCallServlet extends HttpServlet {
                         if(new CallController().addCall(school, viable, type, user, description)) {
                             
                             //Llamada recién hecha
-                            Call call = new CallController().getLast();
+                            final Call call = new CallController().getLast();
+                            
+                            //Creando thread para notificar a todo el personal que se ha creado una nueva denuncia
+                            ExecutorService emailExecutor = Executors.newCachedThreadPool();
+
+                            // from you getSalesUserData() method
+                            emailExecutor.execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        for (User user : new UserController().getAllPersonal()) {
+                                            Mailer.sendMail(call, user);
+                                        }
+                                    } catch (Exception e) {
+                                        System.err.println(e);
+                                    }
+                                }
+                            });
                             
                             message = "Denuncia guardada. Cuando sea procesada, podrá obtener información de la misma "
                                     + "introduciendo el código de denuncia en el apartado Ver Denuncia. Su código es: " + call.getCode();
@@ -228,7 +248,7 @@ public class NewCallServlet extends HttpServlet {
                     }
                     
                     //Validaciones
-                    if (viable && authprov.length == 0) {
+                    if (viable && authprov == null) {
                         request.setAttribute("authprovE","Debe elegir al menos un elemento de la lista");
                         flag = false;
                     }
@@ -271,7 +291,20 @@ public class NewCallServlet extends HttpServlet {
                     
                     request.setAttribute("message", message);
                     request.setAttribute("status", status);
-                    request.getRequestDispatcher("/personal/newcall.jsp").forward(request, response);
+                    
+                    if (flag) {
+                        request.getRequestDispatcher("/personal/newcall.jsp").forward(request, response);
+                    }
+                    else {
+                        //Si hubieron errores de validacion, debe recargar la vista, recuperando los valores que llevaba al cargarse
+                        request.setAttribute("id", call.getId());
+                        request.setAttribute("school", call.getSchool());
+                        request.setAttribute("complaint_type",call.getComplaint_type());
+                        request.setAttribute("description", call.getDescription());
+                        request.setAttribute("taken_action",call.getComplaint_type().getTaken_action());
+                        
+                        request.getRequestDispatcher("/personal/callprocess.jsp").forward(request, response);
+                    }
                 }
                 
                 else {

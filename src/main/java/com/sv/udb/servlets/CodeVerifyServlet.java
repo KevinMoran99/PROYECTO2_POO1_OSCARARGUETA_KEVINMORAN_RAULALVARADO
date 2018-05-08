@@ -7,8 +7,6 @@ package com.sv.udb.servlets;
 
 import com.sv.udb.controllers.CallController;
 import com.sv.udb.models.Call;
-import com.sv.udb.models.User;
-import com.sv.udb.utilities.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;

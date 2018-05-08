@@ -85,6 +85,30 @@ public class UserController {
         }
         return resp;
     }
+   
+   public List<User> getAllPersonal () {
+        List<User> resp = new ArrayList<>();
+        try {
+            PreparedStatement cmd = this.conn.prepareStatement("SELECT * FROM users u INNER JOIN user_types ut ON u.user_type_id = ut.id WHERE u.user_type_id = 2 AND u.state = 1");
+            ResultSet rs = cmd.executeQuery();
+            while (rs.next()) {
+                resp.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), new User_type(rs.getInt(8), rs.getString(9)) , rs.getBoolean(7)));
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error al consultar usuarios: " + ex.getMessage());
+        } finally {
+            try {
+                if (this.conn != null) {
+                    if (!this.conn.isClosed()) {
+                        this.conn.close();
+                    }
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error al cerrar la conexión al consultar usuarios: " + ex.getMessage());
+            }
+        }
+        return resp;
+    }
     
     public User login (String email, String pass) {
         User resp = null;

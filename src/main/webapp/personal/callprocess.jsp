@@ -81,7 +81,7 @@
                             <c:choose>
                                 <c:when test='${taken_action.equals("Tomar contacto con ISP y colegio")}'>
                                     <label for="provider">Proveedores a notificar:</label>
-                                    <select class="form-control" name="provider[]" id="provider" multiple="multiple" required>
+                                    <select class="form-control" name="provider[]" id="provider" multiple="multiple">
                                         <c:forEach var="provItem" items="<%=new ProviderController().getAll(true)%>">
                                             <option value="${provItem.getId()}">${provItem}</option>
                                         </c:forEach>
@@ -89,7 +89,7 @@
                                 </c:when>
                                 <c:otherwise>
                                     <label for="authority">Autoridades a notificar:</label>
-                                    <select class="form-control" name="authority[]" id="authority" multiple="multiple" required>
+                                    <select class="form-control" name="authority[]" id="authority" multiple="multiple">
                                         <c:forEach var="authItem" items="<%=new AuthorityController().getAll(true)%>">
                                             <option value="${authItem.getId()}">${authItem}</option>
                                         </c:forEach>
