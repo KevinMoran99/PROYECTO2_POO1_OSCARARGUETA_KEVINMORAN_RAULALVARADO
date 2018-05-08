@@ -107,7 +107,7 @@
                         </form>
                     </div>
                 </div>
-                <form method="POST" action="${pageContext.request.contextPath}/admin/AdminUsersServlet" name="Demo">
+                        <form method="POST" autocomplete="off" action="${pageContext.request.contextPath}/admin/AdminUsersServlet" name="Demo">
                     <input type="hidden" name="id" id="id" value="${id}"/>
                     <div class="row">
                         <div class="col-md-6">

@@ -221,7 +221,6 @@
         <%
                 Object usua = request.getAttribute("objeUsua");
                 User usuaLoge = usua != null ? (User)usua : null;
-                System.err.println("El usuario es: " + usuaLoge.getName());
                 if(usuaLoge != null){
                     User temp = new UserController().login(usuaLoge.getEmail(), usuaLoge.getPass());
                     if(temp != null){
