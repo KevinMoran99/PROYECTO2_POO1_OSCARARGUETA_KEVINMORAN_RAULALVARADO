@@ -112,7 +112,7 @@
                                         <label for="name" class="text-danger">${nameE}</label>
                                     </c:otherwise>
                                 </c:choose>
-                                <input type="text" class="form-control" name="name" id="name" value="${name}"/>
+                                <input type="text" class="form-control" name="name" id="name" value="${name}" required minlength="3"/>
                             </div>
                         </div>
                         <div class="col-md-6">
