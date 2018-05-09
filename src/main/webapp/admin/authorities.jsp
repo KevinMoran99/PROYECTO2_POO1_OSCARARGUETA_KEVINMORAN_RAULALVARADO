@@ -39,6 +39,7 @@
                 <div class="content">
                     <div class="row">
                         <div class="col-md-12 content">
+                            <!--COPYPASTEABLE (AGREGAR O QUITAR CAMPOS A NECESIDAD)-->
                             <form method="POST" action="${pageContext.request.contextPath}/admin/AdminAuthoritiesServlet" name="filter">
                                 <div class="row">
                                     <div class="col-md-3 text-right">Buscar por:</div>
@@ -70,6 +71,7 @@
                             <form method="POST" action="${pageContext.request.contextPath}/admin/AdminAuthoritiesServlet" name="Tabl">
                             <div class="row">
                                 <div class="col-md-12" style="height: 330px; overflow-y: auto;">
+                                    <!--COPYPASTEABLE (REEMPLAZAR EL DISPLAYTABLE POR EL PROVEIDO YA POR LA VISTA)-->
                                     <c:choose>
                                         <c:when test="${filtered==null}">
                                             <display:table id="tblMain" name="<%= new AuthorityController().getAll(false)%>">
@@ -99,6 +101,7 @@
                         </form>
                     </div>
                 </div>
+                <!--COPYPASTEABLE, EL SERVLET RECIBE ESTOS DATOS, AGREGAR DE SER NECESARIO-->
                 <form method="POST" action="${pageContext.request.contextPath}/admin/AdminAuthoritiesServlet" name="Demo">
                     <input type="hidden" name="id" id="id" value="${id}"/>
                     <div class="row">
@@ -140,6 +143,7 @@
                             </div>
                         </div>
                     </div>
+                    <!--COPYPASTEABLE (EL SERVLET YA MANDA LOS DATOS NECESARIOS PARA QUE FUNCIONE)-->
                     <div class="pull-right">
                         <c:choose>
                             <c:when test="${mode == 'mod'}">
@@ -151,6 +155,7 @@
                         </c:choose>
                     </div>
                 </form>
+                <!--COPYPASTEABLE (EDITAR ACTION CON LA RUTA DEL SERVLET)-->
                 <form method="POST" action="${pageContext.request.contextPath}/admin/AdminAuthoritiesServlet">
                     <div class="pill-right">
                         <input type="submit" class="btn" name="formSubmit" value="Limpiar"/>
@@ -158,6 +163,8 @@
                 </form>
             </div>
         </div>
+                    
+        <!--COPYPASTEABLE(EDITAR LA SECCION DE BUSCAR ENTORNO A LOS ID MENCIONADOS AQUI)-->
         <script>
             $(document).ready(function () {
                 $('select').select2();
