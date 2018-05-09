@@ -1,5 +1,3 @@
-create database pooC;
-
 use pooC;
 
 create table user_types(
