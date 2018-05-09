@@ -126,6 +126,8 @@
         </div>
         <script>
             $(document).ready(function() {
+                $("#profileItem").addClass("active");
+                
                 //Si hay mensajes, los muestra
                 if("${message}" !== "") {
                     var title = "";

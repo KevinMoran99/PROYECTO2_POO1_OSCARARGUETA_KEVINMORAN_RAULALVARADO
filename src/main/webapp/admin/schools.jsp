@@ -71,7 +71,7 @@
                         </form>
                         <form method="POST" action="${pageContext.request.contextPath}/admin/AdminSchoolsServlet" name="Tabl">
                             <div class="row">
-                                <div class="col-md-12" style="height: 330px; overflow-y: auto;">
+                                <div class="col-md-12" style="height: 200px; overflow-y: auto;">
                                     <c:choose>
                                         <c:when test="${filtered==null}">
                                             <display:table id="tblMain" name="<%= new SchoolController().getAll(false)%>">
@@ -156,7 +156,7 @@
                                         <label for="address" class="text-danger">${addressE}</label>
                                     </c:otherwise>
                                 </c:choose>
-                                <textarea rows="4" cols="50" class="form-control" name="address" id="address" value="${address}" required></textarea>
+                                <textarea rows="4" cols="50" class="form-control" name="address" id="address" value="" required>${address}</textarea>
                             </div>
                         </div>
                     </div>
