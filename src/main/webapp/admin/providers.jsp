@@ -132,12 +132,12 @@
                                 <select class="form-control" name="state" id="state" required>
                                     <c:choose>
                                         <c:when test="${state == 0}">
-                                            <option value="0">Inactivo</option>
-                                            <option value="1" selected>Activo</option>
-                                        </c:when>
-                                        <c:otherwise>
                                             <option value="0"selected>Inactivo</option>
                                             <option value="1" >Activo</option>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <option value="0">Inactivo</option>
+                                            <option value="1" selected>Activo</option>
                                         </c:otherwise>
                                     </c:choose>
                                 </select>

@@ -75,7 +75,7 @@
                         </form>
                         <form method="POST" action="${pageContext.request.contextPath}/admin/AdminSchoolsServlet" name="Tabl">
                             <div class="row">
-                                <div class="col-md-12" style="height: 330px; overflow-y: auto;">
+                                <div class="col-md-12" style="height: 200px; overflow-y: auto;">
                                     <c:choose>
                                         <c:when test="${filtered==null}">
                                             <display:table id="tblMain" name="<%= new SchoolController().getAll(false)%>">
@@ -136,12 +136,12 @@
                                 <select class="form-control" name="state" id="state">
                                     <c:choose>
                                         <c:when test="${state == 0}">
-                                            <option value="0">Inactivo</option>
-                                            <option value="1" selected>Activo</option>
-                                        </c:when>
-                                        <c:otherwise>
                                             <option value="0"selected>Inactivo</option>
                                             <option value="1" >Activo</option>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <option value="0">Inactivo</option>
+                                            <option value="1" selected>Activo</option>
                                         </c:otherwise>
                                     </c:choose>
                                 </select>
@@ -159,7 +159,7 @@
                                         <label for="address" class="text-danger">${addressE}</label>
                                     </c:otherwise>
                                 </c:choose>
-                                <textarea rows="4" cols="50" class="form-control" name="address" id="address" value="${address}" required></textarea>
+                                <textarea rows="4" cols="50" class="form-control" name="address" id="address" value="" required>${address}</textarea>
                             </div>
                         </div>
                     </div>
@@ -181,5 +181,20 @@
                 </form>
             </div>
         </div>
+        <script>
+            $(document).ready(function () {
+                $('select').select2();
+                $('#select2Container').hide();
+                $('#filterArg').hide();
+                $("#btnSearch").hide();
+                //Si hay mensajes, los muestra
+                if ("${message}" !== "") {
+                    var title = "";
+                    title = "${status}" == "success" ? "Operación exitosa" : "Operación denegada";
+
+                    swal(title, "${message}", "${status}");
+                }
+            });
+        </script>
     </body>
 </html>
