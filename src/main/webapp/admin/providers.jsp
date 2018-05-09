@@ -46,25 +46,21 @@
                                     <select class="form-control" name="filterType" id="filterType">
                                         <option value="0">N/A</option>
                                         <option value="1">Nombre</option>
-                                        <option value="3">Estado</option>
+                                        <option value="2">Estado</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                    <c:choose>
-                                        <c:when test="true">
                                             <!--Mostrar con Nombre-->
                                             <input type="text" class="form-control" name="filterArg" id="filterArg" value=""/>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <!--Mostrar con Estado-->
-                                            <select class="form-control" name="filterSelect" id="filterArg">
-                                                <option value="1">Activo</option>
-                                                <option value="0">Inactivo</option>
-                                            </select>
-                                        </c:otherwise>
-                                    </c:choose>
-                                    </div>
+                                            <div id="select2Container">
+                                                <!--Mostrar con Estado-->
+                                                <select class="form-control" name="filterSelect" id="filterArg">
+                                                    <option value="1">Activo</option>
+                                                    <option value="0">Inactivo</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                 </div>
                                 <div class="col-md-3">
                                     <input type="submit" class="btn" name="formSubmit" id="btnSearch" value="Buscar"/>
@@ -132,8 +128,8 @@
                                 <select class="form-control" name="state" id="state" required>
                                     <c:choose>
                                         <c:when test="${state == 0}">
-                                            <option value="0"selected>Inactivo</option>
-                                            <option value="1" >Activo</option>
+                                            <option value="0" selected>Inactivo</option>
+                                            <option value="1">Activo</option>
                                         </c:when>
                                         <c:otherwise>
                                             <option value="0">Inactivo</option>
