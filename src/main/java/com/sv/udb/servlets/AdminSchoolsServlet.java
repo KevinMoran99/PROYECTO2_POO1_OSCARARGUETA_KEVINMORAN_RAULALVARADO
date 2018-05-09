@@ -5,8 +5,8 @@
  */
 package com.sv.udb.servlets;
 
-import com.sv.udb.controllers.AuthorityController;
-import com.sv.udb.models.Authority;
+import com.sv.udb.models.School;
+import com.sv.udb.controllers.SchoolController;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -17,10 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author oscar
+ * @author Raul
  */
-@WebServlet(name = "AdminAuthotitiesServlet", urlPatterns = {"/admin/AdminAuthoritiesServlet"})
-public class AdminAuthoritiesServlet extends HttpServlet {
+@WebServlet(name = "AdminSchoolsServlet", urlPatterns = {"/admin/AdminSchoolsServlet"})
+public class AdminSchoolsServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -48,11 +48,12 @@ public class AdminAuthoritiesServlet extends HttpServlet {
                 //trae un id de usuario de la tabla?
                 if(request.getParameter("userId") != null){
                     int id = Integer.parseInt(request.getParameter("userId"));
-                    Authority a = new AuthorityController().getOne(id);
-                    request.setAttribute("id", a.getId());
-                    request.setAttribute("name", a.getName());
-                    request.setAttribute("state",a.isState()?"1":"0");
-                    System.err.println(a.isState()?"1":"0");
+                    School s = new SchoolController().getOne(id);
+                    request.setAttribute("id", s.getId());
+                    request.setAttribute("name", s.getName());
+                    request.setAttribute("address", s.getAddress());
+                    request.setAttribute("state",s.isState()?"1":"0");
+                    System.err.println(s.isState()?"1":"0");
                     //es una herramienta magica que nos ayudara mas tarde(cambio de texto de boton)
                     request.setAttribute("mode", "mod");
                 }
@@ -68,11 +69,11 @@ public class AdminAuthoritiesServlet extends HttpServlet {
                     if(type==1){
                         String param = request.getParameter("filterArg");
                         request.setAttribute("filtered", 1);
-                        request.setAttribute("table",new AuthorityController().search(type, param, false));
+                        request.setAttribute("table",new SchoolController().search(type, param, false));
                     }else{
                         int state = Integer.parseInt(request.getParameter("filterSelect"));
                         String param = state==1 ? "Activo":"Inactivo";
-                        request.setAttribute("table",new AuthorityController().search(type, param, false));
+                        request.setAttribute("table",new SchoolController().search(type, param, false));
                         request.setAttribute("filtered", 1);
                     }
                 }
@@ -82,19 +83,24 @@ public class AdminAuthoritiesServlet extends HttpServlet {
                 if(crud.equals("Agregar")){
                         //obteniendo todos los datos
                     String name = request.getParameter("name").trim();
+                    String address = request.getParameter("address");
                     int state = Integer.parseInt(request.getParameter("state"));
-                    message="Autoridad almacenado";
+                    message="Escuela almacenada";
                     boolean flag = true;
                     if(name.isEmpty()){
                         request.setAttribute("nameE","Nombre: no se permiten campos vacios");
                         flag = false;
                     }
+                    if(address.isEmpty()){
+                        request.setAttribute("addressE","Direccion: no se permiten campos vacios");
+                        flag=false;
+                    }
                     if(flag){
                         boolean temp;
                         temp = state==1;
                         
-                        if(!new AuthorityController().addAuthority(name, temp)){
-                            message = "Error al almacenar autoridad";
+                        if(!new SchoolController().addSchool(name,address,temp)){
+                            message = "Error al almacenar Escuela";
                             status= "error";
                         }
                     }
@@ -103,22 +109,27 @@ public class AdminAuthoritiesServlet extends HttpServlet {
                 }
                 //si es actualizar
                 if(crud.equals("Modificar")){
-                    message = "Autoridad modificada";
+                    message = "Escuela modificada";
                     int id = Integer.parseInt(request.getParameter("id"));
                         //obteniendo todos los datos
                     String name = request.getParameter("name").trim();
+                    String address = request.getParameter("address");
                     int state = Integer.parseInt(request.getParameter("state"));
                     boolean flag = true;
                     if(name.isEmpty()){
                         request.setAttribute("nameE","Nombre: no se permiten campos vacios");
                         flag = false;
                     }
+                    if(address.isEmpty()){
+                        request.setAttribute("addressE","Direccion: no se permiten campos vacios");
+                        flag = false;
+                    }
                     if(flag){
                         boolean temp;
                         temp = state==1;
                         
-                        if(!new AuthorityController().updateAuthority(id,name,temp)){
-                            message = "Error al modificar autoridad";
+                        if(!new SchoolController().updateSchool(id,name,address,temp)){
+                            message = "Error al modificar Escuela";
                             status= "error";
                         }
                     }
@@ -132,7 +143,7 @@ public class AdminAuthoritiesServlet extends HttpServlet {
             //retornando las operaciones
             request.setAttribute("message", message);
             request.setAttribute("status", status);
-            request.getRequestDispatcher("/admin/authorities.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin/schools.jsp").forward(request, response);
         }
     }
 

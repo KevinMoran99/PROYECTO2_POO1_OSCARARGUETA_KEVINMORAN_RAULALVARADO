@@ -5,8 +5,8 @@
  */
 package com.sv.udb.servlets;
 
-import com.sv.udb.controllers.AuthorityController;
-import com.sv.udb.models.Authority;
+import com.sv.udb.controllers.ProviderController;
+import com.sv.udb.models.Provider;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -17,10 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author oscar
+ * @author Raul
  */
-@WebServlet(name = "AdminAuthotitiesServlet", urlPatterns = {"/admin/AdminAuthoritiesServlet"})
-public class AdminAuthoritiesServlet extends HttpServlet {
+@WebServlet(name = "AdminProvidersServlet", urlPatterns = {"/admin/AdminProvidersServlet"})
+public class AdminProvidersServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -48,11 +48,11 @@ public class AdminAuthoritiesServlet extends HttpServlet {
                 //trae un id de usuario de la tabla?
                 if(request.getParameter("userId") != null){
                     int id = Integer.parseInt(request.getParameter("userId"));
-                    Authority a = new AuthorityController().getOne(id);
-                    request.setAttribute("id", a.getId());
-                    request.setAttribute("name", a.getName());
-                    request.setAttribute("state",a.isState()?"1":"0");
-                    System.err.println(a.isState()?"1":"0");
+                    Provider u = new ProviderController().getOne(id);
+                    request.setAttribute("id", u.getId());
+                    request.setAttribute("name", u.getName());
+                    request.setAttribute("state",u.isState()?"1":"0");
+                    System.err.println(u.isState()?"1":"0");
                     //es una herramienta magica que nos ayudara mas tarde(cambio de texto de boton)
                     request.setAttribute("mode", "mod");
                 }
@@ -68,11 +68,11 @@ public class AdminAuthoritiesServlet extends HttpServlet {
                     if(type==1){
                         String param = request.getParameter("filterArg");
                         request.setAttribute("filtered", 1);
-                        request.setAttribute("table",new AuthorityController().search(type, param, false));
+                        request.setAttribute("table",new ProviderController().search(type, param, false));
                     }else{
                         int state = Integer.parseInt(request.getParameter("filterSelect"));
                         String param = state==1 ? "Activo":"Inactivo";
-                        request.setAttribute("table",new AuthorityController().search(type, param, false));
+                        request.setAttribute("table",new ProviderController().search(type, param, false));
                         request.setAttribute("filtered", 1);
                     }
                 }
@@ -83,7 +83,7 @@ public class AdminAuthoritiesServlet extends HttpServlet {
                         //obteniendo todos los datos
                     String name = request.getParameter("name").trim();
                     int state = Integer.parseInt(request.getParameter("state"));
-                    message="Autoridad almacenado";
+                    message="Proveedor almacenado";
                     boolean flag = true;
                     if(name.isEmpty()){
                         request.setAttribute("nameE","Nombre: no se permiten campos vacios");
@@ -93,8 +93,8 @@ public class AdminAuthoritiesServlet extends HttpServlet {
                         boolean temp;
                         temp = state==1;
                         
-                        if(!new AuthorityController().addAuthority(name, temp)){
-                            message = "Error al almacenar autoridad";
+                        if(!new ProviderController().addProvider(name, temp)){
+                            message = "Error al almacenar Proveedor";
                             status= "error";
                         }
                     }
@@ -103,7 +103,7 @@ public class AdminAuthoritiesServlet extends HttpServlet {
                 }
                 //si es actualizar
                 if(crud.equals("Modificar")){
-                    message = "Autoridad modificada";
+                    message = "Proveedor modificado";
                     int id = Integer.parseInt(request.getParameter("id"));
                         //obteniendo todos los datos
                     String name = request.getParameter("name").trim();
@@ -117,8 +117,8 @@ public class AdminAuthoritiesServlet extends HttpServlet {
                         boolean temp;
                         temp = state==1;
                         
-                        if(!new AuthorityController().updateAuthority(id,name,temp)){
-                            message = "Error al modificar autoridad";
+                        if(!new ProviderController().updateProvider(id,name,temp)){
+                            message = "Error al modificar proveedor";
                             status= "error";
                         }
                     }
@@ -132,7 +132,7 @@ public class AdminAuthoritiesServlet extends HttpServlet {
             //retornando las operaciones
             request.setAttribute("message", message);
             request.setAttribute("status", status);
-            request.getRequestDispatcher("/admin/authorities.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin/providers.jsp").forward(request, response);
         }
     }
 
