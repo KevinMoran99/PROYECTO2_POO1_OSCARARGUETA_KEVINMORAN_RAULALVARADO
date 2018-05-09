@@ -126,6 +126,8 @@
             $(document).ready(function() {
                 $('select').select2();
                 
+                $("#newCallItem").addClass("active");
+                
                 //Si hay mensajes, los muestra
                 if("${message}" !== "") {
                     var title = "";

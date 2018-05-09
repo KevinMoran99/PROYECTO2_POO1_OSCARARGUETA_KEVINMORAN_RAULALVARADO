@@ -71,5 +71,10 @@
                 </div>
             </div>
         </div>
+        <script>
+            $(document).ready(function() {
+                $("#reportsItem").addClass("active");
+            });
+        </script>
     </body>
 </html>

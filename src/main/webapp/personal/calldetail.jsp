@@ -140,6 +140,8 @@
         
         <script>
             $(document).ready(function() {
+                $("#callsItem").addClass("active");
+                
                 //Si hay mensajes, los muestra
                 if("${message}" !== "") {
                     var title = "";

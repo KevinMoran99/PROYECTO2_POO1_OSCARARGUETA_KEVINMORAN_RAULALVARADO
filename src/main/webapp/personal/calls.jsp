@@ -105,6 +105,8 @@
         <script>
             $(document).ready(function() {
                 $('select').select2();
+                
+                $("#callsItem").addClass("active");
             });
             
             //Al elegir un tipo de filtro

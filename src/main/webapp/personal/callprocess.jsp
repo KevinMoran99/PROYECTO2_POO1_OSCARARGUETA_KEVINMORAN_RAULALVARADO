@@ -111,6 +111,8 @@
             $(document).ready(function() {
                 $('select').select2();
                 
+                $("#callsItem").addClass("active");
+                
                 $("#AuthProv").children().hide();
                 
                 //Si hay mensajes, los muestra
