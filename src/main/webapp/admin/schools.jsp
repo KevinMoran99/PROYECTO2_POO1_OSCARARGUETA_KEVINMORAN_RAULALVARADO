@@ -53,20 +53,16 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                    <c:choose>
-                                        <c:when test="true">
-                                            <!--Mostrar con Nombre y Dirección-->
+                                            <!--Mostrar con Nombre-->
                                             <input type="text" class="form-control" name="filterArg" id="filterArg" value=""/>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <!--Mostrar con Acción tomada y estado-->
-                                            <select class="form-control" name="filterSelect" id="filterArg">
-                                                <option value="0">Activo</option>
-                                                <option value="1">Inactivo</option>
-                                            </select>
-                                        </c:otherwise>
-                                    </c:choose>
-                                    </div>
+                                            <div id="select2Container">
+                                                <!--Mostrar con Estado-->
+                                                <select class="form-control" name="filterSelect" id="filterArg">
+                                                    <option value="1">Activo</option>
+                                                    <option value="0">Inactivo</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                 </div>
                                 <div class="col-md-3">
                                     <input type="submit" class="btn" name="formSubmit" value="Buscar"/>
@@ -95,6 +91,7 @@
                                                     <input type="radio" name="userId" value="${tblMain.id}" onchange="this.form.submit();"/>
                                                 </display:column>
                                                 <display:column property="name" title="Nombre" sortable="true" />
+                                                <display:column property="address" title="Direccion" sortable="true" />
                                                 <display:column title="Estado" sortable="true">
                                                     <c:choose><c:when test="${tblMain.state}">Activo</c:when><c:otherwise>Inactivo</c:otherwise></c:choose>
                                                 </display:column>
@@ -136,12 +133,12 @@
                                 <select class="form-control" name="state" id="state">
                                     <c:choose>
                                         <c:when test="${state == 0}">
-                                            <option value="0">Inactivo</option>
-                                            <option value="1" selected>Activo</option>
+                                            <option value="0" selected>Inactivo</option>
+                                            <option value="1">Activo</option>
                                         </c:when>
                                         <c:otherwise>
-                                            <option value="0"selected>Inactivo</option>
-                                            <option value="1" >Activo</option>
+                                            <option value="0">Inactivo</option>
+                                            <option value="1" selected>Activo</option>
                                         </c:otherwise>
                                     </c:choose>
                                 </select>
@@ -181,5 +178,40 @@
                 </form>
             </div>
         </div>
+                    <script>
+            $(document).ready(function () {
+                $('select').select2();
+                $('#select2Container').hide();
+                $('#filterArg').hide();
+                $("#btnSearch").hide();
+                //Si hay mensajes, los muestra
+                if ("${message}" !== "") {
+                    var title = "";
+                    title = "${status}" == "success" ? "Operación exitosa" : "Operación denegada";
+
+                    swal(title, "${message}", "${status}");
+                }
+            });
+            $("#filterType").change(function () {
+                var select = $("#filterType");
+                $("#filterSelect").empty();
+
+                if (select.val() === "3") {
+                    $("#btnSearch").show();
+                    $("#filterArg").hide();
+                    $("#select2Container").show();
+                } else {
+                    if (select.val() === "0") {
+                        $("#btnSearch").hide();
+                        $('#select2Container').hide();
+                        $('#filterArg').hide();
+                    } else {
+                        $("#btnSearch").show();
+                        $("#filterArg").show();
+                        $("#select2Container").hide();
+                    }
+                }
+            });
+        </script>
     </body>
 </html>

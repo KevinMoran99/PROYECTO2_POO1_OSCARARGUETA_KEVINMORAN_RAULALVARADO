@@ -66,7 +66,7 @@ public class AdminSchoolsServlet extends HttpServlet {
                 
                 if(crud.equals("Buscar")){
                     int type= Integer.parseInt(request.getParameter("filterType"));
-                    if(type==1){
+                    if(type==1 || type==2){
                         String param = request.getParameter("filterArg");
                         request.setAttribute("filtered", 1);
                         request.setAttribute("table",new SchoolController().search(type, param, false));
