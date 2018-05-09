@@ -1,4 +1,4 @@
-<%-- 
+    <%-- 
     Document   : users
     Created on : 05-03-2018, 02:23:28 PM
     Author     : kevin
@@ -53,7 +53,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <!--Mostrar con Nombre-->
-                                            <input type="text" class="form-control" name="filterArg" id="filterArg" value="Esto se muestra al elegir Nombre"/>
+                                            <input type="text" class="form-control" name="filterArg" id="filterArg" value=""/>
                                             <!--Mostrar con Acción tomada y estado-->
                                             <div id="select2Container">
                                                 <select class="form-control" name="filterSelect" id="filterSelect">
