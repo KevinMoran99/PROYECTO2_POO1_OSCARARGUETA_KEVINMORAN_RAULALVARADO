@@ -189,6 +189,7 @@
         <script>
             $(document).ready(function () {
                 $('select').select2();
+                $("#complaintsItem").addClass("active");
                 $('#select2Container').hide();
                 $('#filterArg').hide();
                 $("#btnSearch").hide();

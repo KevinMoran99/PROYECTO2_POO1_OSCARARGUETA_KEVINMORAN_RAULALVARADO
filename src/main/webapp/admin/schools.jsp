@@ -184,6 +184,7 @@
         <script>
             $(document).ready(function () {
                 $('select').select2();
+                $("#schoolsItem").addClass("active");
                 $('#select2Container').hide();
                 $('#filterArg').hide();
                 $("#btnSearch").hide();

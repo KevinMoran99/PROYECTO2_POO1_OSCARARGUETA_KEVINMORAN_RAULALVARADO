@@ -246,6 +246,7 @@
         <script>
             $(document).ready(function() {
                 $('select').select2();
+                $("#usersItem").addClass("active");
                 $('#select2Container').hide();
                 $('#filterArg').hide();
                 $("#btnSearch").hide();

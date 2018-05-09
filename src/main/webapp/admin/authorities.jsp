@@ -168,6 +168,7 @@
         <script>
             $(document).ready(function () {
                 $('select').select2();
+                $("#authsItem").addClass("active");
                 $('#select2Container').hide();
                 $('#filterArg').hide();
                 $("#btnSearch").hide();

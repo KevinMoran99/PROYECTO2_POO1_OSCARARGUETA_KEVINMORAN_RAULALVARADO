@@ -50,6 +50,7 @@ public class NewCallServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
         try {
             boolean isPost = request.getMethod().equals("POST");
             
@@ -308,11 +309,11 @@ public class NewCallServlet extends HttpServlet {
                 }
                 
                 else {
-                    request.getRequestDispatcher("/").forward(request, response);
+                    request.getRequestDispatcher("/personal/newcall.jsp").forward(request, response);
                 }
             }
             else {
-                request.getRequestDispatcher("/").forward(request, response);
+                request.getRequestDispatcher("/personal/newcall.jsp").forward(request, response);
             }
         }
         catch(Exception e) {

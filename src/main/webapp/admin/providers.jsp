@@ -165,6 +165,7 @@
                     <script>
             $(document).ready(function () {
                 $('select').select2();
+                $("#provsItem").addClass("active");
                 $('#select2Container').hide();
                 $('#filterArg').hide();
                 $("#btnSearch").hide();
